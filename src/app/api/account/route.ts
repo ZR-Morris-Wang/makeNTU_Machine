@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { env } from "../../../utils/env";
 import { type NextApiRequest, NextApiResponse } from "next";
-
 const prisma = new PrismaClient();
 const secretkey = env.PASSWORD_SECRET;
 
@@ -57,5 +56,4 @@ export async function SignInApi(req: NextApiRequest, res: NextApiResponse) {
             })
         }
     }
-
 }

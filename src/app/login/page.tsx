@@ -27,10 +27,9 @@ export default function Login() {
         if (!checkInput()) {
             return;
         }
-        console.log(username, password, permission);
         try {
-            const registerData = await SignUpApi({ username, password, permission }, {});
-            localStorage.setItem("jwt-token: ", registerData.token);
+            const { token: token } = await signUpApi({ account, password, permission });
+            localStorage.setItem("jwt-token: ", token);
         } catch(error) {
             alert("發生錯誤");
             console.log(error);
@@ -44,14 +43,13 @@ export default function Login() {
             return;
         }
         try {
-            const resultData = await SignInApi({ username, password });
-            localStorage.setItem("jwt-token: ", resultData.token);
+            const { token: token } = await signInApi({ account, password });
+            localStorage.setItem("jwt-token: ", token);
         } catch(error) {
             alert("發生錯誤");
             console.log(error);
             return;
         }
-        direct();
     }
 
     const checkInput = async () => {
@@ -91,8 +89,8 @@ export default function Login() {
 
     return (
         <>
-        <div className="m-2 flex flex-col items-center justify-between border-2 border-black">
-            <div className="m-2 flex items-center gap-2 border-2 border-black active:none">
+        <div className="m-2 flex flex-col items-center justify-between">
+            <div className="m-2 flex items-center gap-2 active:none">
                 <p className="font-bold">帳號：</p>
                 <InputArea
                     ref={usernameRef}
@@ -102,7 +100,7 @@ export default function Login() {
                     onChange={(e) => setUsername(e)}
                 />
             </div>
-            <div className="m-2 flex items-center gap-2 border-2 border-black">
+            <div className="m-2 flex items-center gap-2">
                 <p className="font-bold">密碼：</p>
                 <InputArea
                     ref={passwordRef}
@@ -113,7 +111,7 @@ export default function Login() {
                     onChange={(e) => setPassword(e)}
                 />
             </div>
-            {isSignUp && <div className="w-1/3 m-2 flex items-center gap-2 border-2 border-black">
+            {isSignUp && <div className="w-1/3 m-2 flex items-center gap-2">
                 <p className="font-bold">確認密碼：</p>
                 <InputArea
                     ref={comfirmPasswordRef}
@@ -124,12 +122,12 @@ export default function Login() {
                     onChange={(e) => setComfirmPassword(e)}
                 />
             </div>}
-            {!isSignUp && <div className="m-2 flex items-center justify-center gap-2 border-2 border-black">
-                <a className="m-1 text-xs font-bold underline hover:text-blue-800 hover:cursor-pointer" onClick={() => setIsSignUp(true)}>
+            {!isSignUp && <div className="m-2 flex items-center justify-center gap-2">
+                <a className="m-1 text-xs font-bold underline hover:text-blue-800" onClick={() => setIsSignUp(true)}>
                     <p>—第一次登入？註冊—</p>
                 </a>
             </div>}
-            <div className="m-2 flex gap-2 border-2 border-black">
+            <div className="m-2 flex gap-2">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
                     onClick={() => router.push("/")}

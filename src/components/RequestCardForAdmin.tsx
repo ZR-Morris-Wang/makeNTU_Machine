@@ -21,7 +21,7 @@ export default function RequestCard({ information }: RequestCardProps) {
 
     return (
         <>
-        <div className="g-4 w-full h-12 flex items-center justify-between bg-white border-2 border-black" draggable="true">
+        <div className="g-4 w-full h-12 flex items-center justify-between bg-white border-b-2 border-black" draggable="true">
             <button
                 className="ml-1 w-16 h-full hover:bg-gray-200"
                 onClick={() => setStatusDialogOpen(true)}

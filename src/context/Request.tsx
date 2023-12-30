@@ -1,6 +1,5 @@
 'use client'
-import { createContext, useState } from "react";
-import prisma from "../../prisma/client";
+import { createContext, useEffect, useState } from "react";
 // import { Account } from "@/context/Account";
 
 export type Request = {
@@ -17,13 +16,13 @@ export type Request = {
 export type RequestContext = {
     requests: Request[];
     setRequests: (requests: Request[]) => void;
-    // sendInformation: (request: Omit<InformationContext, "timestamp">) => Promise<void>;
+    sendRequest: (request: Omit<Request, "id" | "number" | "status" | "createAt">) => Promise<void>;
 }
 
 export const RequestContext = createContext<RequestContext>({
     requests: [],
     setRequests: () => {},
-    // sendInformation: async () => {},
+    sendRequest: async () => {},
 });
 
 type Props = {
@@ -31,10 +30,45 @@ type Props = {
 }
 export const  RequestProvider = async ({ children }: Props) => {
     const [requests, setRequests] = useState<Request[]>([]);
-    const requestList = await prisma.request.findMany();
-    //setRequests(requestList);
+    
+    useEffect(() => {
+        const fetchRequest = async () => {
+            try {
+                const res = await fetch("/api/reserve", {
+                    method: "GET", 
+                    headers: {
+                        "Content-Type": "application/json", 
+                    }, 
+                });
+                const data = await res.json();
+                if (data?.messages) {
+                  setRequests(data.messages);
+                  console.log(data.messages);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchRequest();
+    }, []);
+
+    const sendRequest = async(request: Omit<Request, "id" | "number" | "status" | "createAt">) => {
+        try {
+            const res = await fetch("/api/reserve", {
+              method: "POST",
+              body: JSON.stringify(request),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const data = await res.json();
+          } catch (error) {
+            console.log(error);
+          }
+    }
+
     return (
-        <RequestContext.Provider value={{ requests, setRequests }}>
+        <RequestContext.Provider value={{ requests, setRequests, sendRequest }}>
             {children}
         </RequestContext.Provider>
     )

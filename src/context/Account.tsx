@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 export type Account = {
     id: number;
@@ -10,7 +10,7 @@ export type Account = {
 export type AccountRequest = {
     account: Account["name"];
     password: Account["password"];
-    permission?: Account["permission"];
+    permission: Account["permission"];
 }
 export type AccountResponse = {
     account: Account["name"];
@@ -32,6 +32,22 @@ type Props = {
 }
 export const AccountProvider = ({ children }: Props) => {
     const [user, setAccount] = useState<Account | null>(null);
+
+    useEffect(() => {
+        const fetchAccount = async() => {
+            try {
+                const res = await fetch("/api/account");
+                const data = await res.json();
+                if (data?.messages) {
+                  setAccount(data.messages);
+                  console.log(data.messages);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchAccount();
+    }, [])
 
     return (
         <AccountContext.Provider value={{ user, setAccount }}>

@@ -14,7 +14,7 @@ export default function RequestCard({ information, isSender }: RequestCardProps)
     return (
         <>
         <div
-            className={`g-4 w-full h-12 flex items-center justify-between border-2 border-black ${
+            className={`g-4 w-full h-12 flex items-center justify-between border-black border-b-2 ${
                 isSender ? "bg-yellow-200" : ""
             }`}
         >

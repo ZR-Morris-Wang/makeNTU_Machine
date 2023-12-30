@@ -19,7 +19,7 @@ export default function RequestCardForMachine({ information }: RequestCardProps)
 
     return (
         <>
-        <div className="g-3 w-full h-12 flex items-center justify-between bg-white border-2 border-black">
+        <div className="g-3 w-full h-12 flex items-center justify-between bg-white border-b-2 border-black">
             <p className="ml-2">{information?.filename}</p>
             <button
                 className="ml-5 w-12 h-full hover:bg-gray-200"

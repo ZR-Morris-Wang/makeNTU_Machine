@@ -19,7 +19,7 @@ export default function QueueListForAdmin() {
         <>
         <div className="m-2 max-h-[90vh] w-1/2 flex flex-col items-center justify-start bg-white rounded border-2 border-black overflow-y-auto">
             <div className="w-full sticky top-0 bg-white z-10">
-                <div className="g-4 w-full flex flex-row items-center justify-between border-2 border-black">
+                <div className="g-4 w-full flex flex-row items-center justify-between border-b-2 border-black">
                     <p className="ml-1 text-sm">檔案名稱</p>
                     <p className="text-sm">列印類型</p>
                     <p className="text-sm">列印備註</p>

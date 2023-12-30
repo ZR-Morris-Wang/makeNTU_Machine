@@ -13,3 +13,13 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+// module.exports = {
+//   webpack: (config, { isServer }) => {
+//     config.module.rules.push({
+//       test: /\.html$/,
+//       use: 'html-loader',
+//     });
+
+//     return config;
+//   },
+// };

@@ -12,8 +12,8 @@ export default function contestant() {
         <>
         <Map />
         <QueueList />
-        <div className="h-full m-2 flex flex-col items-center justify-center border-2 border-black">
-            <div className="flex flex-row justify-between border-2 border-black">
+        <div className="h-full m-2 flex flex-col items-center justify-center">
+            <div className="flex flex-row justify-between">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
                     onClick={() => router.push("/")}
