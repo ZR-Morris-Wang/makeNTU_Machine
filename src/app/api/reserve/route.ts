@@ -1,9 +1,9 @@
-import prisma from ".prisma/client";
-//import { type NextApiRequest, NextApiResponse } from "next";
+//import prisma from ".prisma/client";  
+import prisma from "../../../../prisma/client";
 import { NextResponse, type NextRequest } from "next/server";
 
 //POST
-export async function POST(req: NextRequest, ) {
+export async function POST(req: NextRequest) {
     const data = await req.json();
     const { group, type, filename, comment } = data;
     try {
@@ -28,10 +28,19 @@ export async function POST(req: NextRequest, ) {
 }
 
 // GET
-// export async function GET (req: NextRequest, res:NextResponse) {
-//     const resultReq = await prisma.request.findMany();
-//     return res.status(200).json(resultReq);
-// }
+export async function GET (req: NextRequest) {
+    try{
+        const dbresultReq = await prisma.request.findMany();
+        // console.log(dbresultReq);
+        return NextResponse.json({dbresultReq}, {status: 200});
+    }catch(error){
+        console.log("error: ", error);
+        return NextResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 },
+        );
+    }
+}
 
 //POST
 // export const UpdateStatus = async (req: NextRequest, res: NextResponse) => {
