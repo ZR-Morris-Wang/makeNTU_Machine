@@ -1,13 +1,24 @@
 'use client'
-import React, { useContext, useEffect } from "react";
+import React, { SetStateAction, useContext, useEffect, useState } from "react";
 import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 import RequestCard from "./RequestCard";
-
+// import prisma from "../../prisma/client";
+import useRequest from "@/hooks/useRequest";
+import { Contrail_One } from "next/font/google";
+type indRequest = {
+    group: number
+    type: string
+    number: number
+    filename: string
+    comment: string
+    status: string
+}
 export default function QueueList() {
     const { requests, setRequests } = useContext(RequestContext);
     const { user } = useContext(AccountContext);
-
+    const [ requestList, setRequestList ] = useState<indRequest[]>();
+    const { getRequest } = useRequest();
     // useEffect(() => {
     //     const fetchRequests = async () => {
     //         const token = localStorage.getItem("token");
@@ -28,7 +39,20 @@ export default function QueueList() {
     //     fetchRequests();
     // }, []);
     
-    // const requestList = await prisma.request.findMany();
+    useEffect(() => {
+        const gReq = async () => {
+            try{
+                const requestListInit = await getRequest();
+                const requestListJson:indRequest[] = requestListInit["dbresultReq"];
+                setRequestList(requestListJson);
+            }
+            catch(e){
+                console.log(e);
+            }
+        }
+        gReq();
+    },[]);
+    // const finalreq = JSON.stringify
     const testRequest = {
         group: "team1",
         filename: "test1",
@@ -70,8 +94,8 @@ export default function QueueList() {
                         )}
                     return null;
                 })} */}
-                {/* {
-                    requestList.map((request)=>(
+                {
+                    requestList?.map((request)=>(
                         <RequestCard information={{
                             group:String(request.group),
                             filename:request.filename,
@@ -80,7 +104,7 @@ export default function QueueList() {
                         }}></RequestCard>
                         )
                     )
-                } */}
+                }
             </div>
         </div>
         </>

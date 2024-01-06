@@ -7,7 +7,7 @@ import useRequest from "@/hooks/useRequest";
 export default function HeadBar() {
     const router = useRouter();
     const { user } = useContext(AccountContext);
-    const { postRequest } = useRequest();
+    const { postRequest, getRequest } = useRequest();
     const group = 1;
     const type = "3dp";
     const number = 1;
@@ -26,14 +26,22 @@ export default function HeadBar() {
                     status,
                 }
             )
-            console.log("seccessful test")
+            console.log("successful test")
         }
-        
         catch (e){
             console.error(e);
             alert("Error testing");
         }
-
+    }
+    const testApitwo = async () => {
+        try {
+            await getRequest();
+            console.log("successful test2")
+        }
+        catch(e){
+            console.error(e);
+            alert("Error testing2");
+        }
     }
     return (
         <>
@@ -55,6 +63,7 @@ export default function HeadBar() {
                     onClick={() => router.push("/")}
                 >登出</button>}
                 <button onClick={()=>{testApi()}} className="hover:bg-orange-500">test</button>
+                <button onClick={()=>{testApitwo()}} className="hover:bg-red-500">test2</button>
             </div>
         </div>
         </>
