@@ -7,13 +7,15 @@ import useRequest from "@/hooks/useRequest";
 export default function HeadBar() {
     const router = useRouter();
     const { user } = useContext(AccountContext);
-    const { postRequest, getRequest } = useRequest();
+    const { postRequest, getRequest, putRequest } = useRequest();
     const group = 1;
     const type = "3dp";
     const number = 1;
     const filename = "lol";
-    const comment = "hi"
-    const status = "hi"
+    const comment = "hi";
+    const status = "hi";
+    const newStatus = "done";
+    const id = 6;
     const testApi = async () =>{
         try{
             await postRequest(
@@ -43,6 +45,18 @@ export default function HeadBar() {
             alert("Error testing2");
         }
     }
+    const testApithree = async () => {
+        try{
+            await putRequest({
+                id,
+                newStatus
+            })
+            console.log("putted")
+        }catch(e){
+            console.error(e);
+            alert("Error testing3");
+        }
+    }
     return (
         <>
         <div className="h-16 m-2 flex items-center justify-center cursor-pointer" onClick={()=>router.push("/")}>
@@ -64,6 +78,7 @@ export default function HeadBar() {
                 >登出</button>}
                 <button onClick={()=>{testApi()}} className="hover:bg-orange-500">test</button>
                 <button onClick={()=>{testApitwo()}} className="hover:bg-red-500">test2</button>
+                <button onClick={()=>{testApithree()}} className="hover:bg-purple-500">test3</button>
             </div>
         </div>
         </>
