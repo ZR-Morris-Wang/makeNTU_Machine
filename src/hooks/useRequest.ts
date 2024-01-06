@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 
 export default function useRequest() {
     const router = useRouter();
+    
     const postRequest = async ({
         group,
         type,
@@ -37,7 +38,8 @@ export default function useRequest() {
         // from server components.
         router.refresh();
       };
-    const getRequest = async () => {
+    
+      const getRequest = async () => {
       const res = await fetch("/api/reserve", {
         method: "GET",
       });
@@ -48,8 +50,26 @@ export default function useRequest() {
       router.refresh();
       return res.json();
     }
+
+    const putRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
+      // console.log("putteded")
+      const res = await fetch("/api/reserve", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          newStatus
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+    }
+
     return {
       postRequest,
-      getRequest
+      getRequest,
+      putRequest
     };
 }

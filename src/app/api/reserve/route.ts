@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
 export async function GET (req: NextRequest) {
     try{
         const dbresultReq = await prisma.request.findMany();
-        // console.log(dbresultReq);
         return NextResponse.json({dbresultReq}, {status: 200});
     }catch(error){
         console.log("error: ", error);
@@ -42,25 +41,28 @@ export async function GET (req: NextRequest) {
     }
 }
 
-//POST
-// export const UpdateStatus = async (req: NextRequest, res: NextResponse) => {
-//     const { id, username, type, title, note, number, status} = req.body;
-//     try{
-//       const result = await prisma.request.update({
-//         where: {
-//           id: id,
-//         },
-//         data:{
-//           group: username,
-//           type: type,
-//           filename: title,
-//           comment: note,
-//           number: 0,
-//           status: status,
-//         }
-//       })
-//       return res.status(200).json({ data: result});
-//     } catch (error) {
-//       return res.status(400).json({ error: "unable to update status"});
-//     }
-//   }
+//PUT
+export async function PUT (req: NextRequest) {
+    
+    const data = await req.json();
+    const {newStatus} = data;
+    console.log(newStatus);
+    const reqID = data.id;
+    try{
+      const result = await prisma.request.update({
+        where: {
+          id: reqID,
+        },
+        data:{
+          status: newStatus,
+        }
+      })
+      return NextResponse.json({ status: 200 });
+    } catch (error) {
+        console.log("error: ", error);
+        return NextResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 },
+          );
+    }
+  }
