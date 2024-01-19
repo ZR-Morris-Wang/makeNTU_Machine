@@ -9,8 +9,8 @@ export default function HeadBar() {
     const { user } = useContext(AccountContext);
     const { postRequest, getRequest, putRequest } = useRequest();
     const group = 1;
-    const type = "3dp";
-    const number = 1;
+    const machine = 1;
+    const material = [1,2,3,4];
     const filename = "lol";
     const comment = "hi";
     const status = "hi";
@@ -21,8 +21,8 @@ export default function HeadBar() {
             await postRequest(
                 {
                     group,
-                    type,
-                    number,
+                    machine,
+                    material,
                     filename,
                     comment,
                     status,

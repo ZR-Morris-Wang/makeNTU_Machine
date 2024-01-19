@@ -5,26 +5,27 @@ export default function useRequest() {
     
     const postRequest = async ({
         group,
-        type,
-        number,
+        machine,
         filename,
+        material,
         comment,
         status
       }: {
         group:number
-        type:string
-        number:number
+        machine:number
         filename:string
+        material:number[]
         comment?:string
         status?:string
       }) => {
-        const res = await fetch("/api/reserve", {
+        // console.log(machine,material)
+        const res = await fetch("/api/reserveforLaser", {
           method: "POST",
           body: JSON.stringify({
             group,
-            type,
-            number,
+            machine,
             filename,
+            material,
             comment,
             status
           }),
