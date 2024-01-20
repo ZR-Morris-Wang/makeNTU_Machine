@@ -7,7 +7,7 @@ import useRequest from "@/hooks/useRequest";
 export default function HeadBar() {
     const router = useRouter();
     const { user } = useContext(AccountContext);
-    const { postRequest, getRequest, putRequest } = useRequest();
+    const { postRequest, getRequest, putRequest, createAccount } = useRequest();
     const group = 1;
     const machine = 1;
     const material = [1,2,3,4];
@@ -16,6 +16,33 @@ export default function HeadBar() {
     const status = "hi";
     const newStatus = "done";
     const id = 6;
+    const userinfo = {
+        name: "MyName",
+        password: "drowssap",
+        permission: "contestant"
+    }
+
+
+    
+    const testApi4 = async() => {
+        try{
+            await createAccount(
+                {
+                    name: userinfo.name,
+                    password: userinfo.password,
+                    permission: userinfo.permission,
+                }
+            )
+            console.log("successful test")
+        }
+        catch (e){
+            console.error(e);
+            alert("Error testing");
+        }
+    }
+
+
+
     const testApi = async () =>{
         try{
             await postRequest(
@@ -79,6 +106,7 @@ export default function HeadBar() {
                 <button onClick={()=>{testApi()}} className="hover:bg-orange-500">test</button>
                 <button onClick={()=>{testApitwo()}} className="hover:bg-red-500">test2</button>
                 <button onClick={()=>{testApithree()}} className="hover:bg-purple-500">test3</button>
+                <button onClick={()=>{testApi4()}} className="hover:bg-purple-500">test4</button>
             </div>
         </div>
         </>
