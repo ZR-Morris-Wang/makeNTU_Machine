@@ -1,32 +1,11 @@
 import { useRouter } from "next/navigation";
 import type { Account } from "@/context/Account";
 
-export default function useRequest() {
+export default function useLaserCutRequest() {
     const router = useRouter();
     
-    const createAccount = async ({
-      name, password, permission
-    }:{name: string, password: string, permission: string}) => {
-      const res = await fetch("/api/account", {
-        method: "POST",
-        body: JSON.stringify({
-          name: name,
-          password: password,
-          permission: permission,
-        }),
-      });
-
-      if (!res.ok) {
-        const body = await res.json();
-        throw new Error(body.error);
-      }
-      // router.refresh() is a Next.js function that refreshes the page without
-      // reloading the page. This is useful for when we want to update the UI
-      // from server components.
-      router.refresh();
-    };
-
-    const postRequest = async ({
+    //POST
+    const postLaserCutRequest = async ({
         group,
         machine,
         filename,
@@ -34,14 +13,14 @@ export default function useRequest() {
         comment,
         status
       }: {
-        group:number
+        group:string
         machine:number
         filename:string
         material:number[]
         comment?:string
         status?:string
       }) => {
-        // console.log(machine,material)
+        // console.log(group, material)
         const res = await fetch("/api/reserveforLaser", {
           method: "POST",
           body: JSON.stringify({
@@ -63,8 +42,10 @@ export default function useRequest() {
         router.refresh();
       };
     
-      const getRequest = async () => {
-      const res = await fetch("/api/reserve", {
+    //GET
+    const getLaserCutRequest = async () => {
+      console.log("hehe")
+      const res = await fetch("/api/reserveforLaser", {
         method: "GET",
       });
       if (!res.ok) {
@@ -74,10 +55,10 @@ export default function useRequest() {
       router.refresh();
       return res.json();
     }
-
-    const putRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
-      // console.log("putteded")
-      const res = await fetch("/api/reserve", {
+    
+    //PUT
+    const putLaserCutRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
+      const res = await fetch("/api/reserveforLaser", {
         method: "PUT",
         body: JSON.stringify({
           id,
@@ -92,9 +73,8 @@ export default function useRequest() {
     }
 
     return {
-      postRequest,
-      getRequest,
-      putRequest,
-      createAccount,
+      postLaserCutRequest,
+      getLaserCutRequest,
+      putLaserCutRequest,
     };
 }

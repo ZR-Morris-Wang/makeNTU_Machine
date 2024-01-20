@@ -3,19 +3,26 @@ import React, { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { AccountContext } from "@/context/Account";
 
-import useRequest from "@/hooks/useRequest";
+import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import useAccount from "@/hooks/useAccount";
 export default function HeadBar() {
     const router = useRouter();
     const { user } = useContext(AccountContext);
-    const { postRequest, getRequest, putRequest, createAccount } = useRequest();
-    const group = 1;
+
+    const { postLaserCutRequest, getLaserCutRequest, putLaserCutRequest } = useLaserCutRequest();
+    const { createAccount, getAccount } = useAccount();
+
+    const group = "team1";
     const machine = 1;
     const material = [1,2,3,4];
     const filename = "lol";
     const comment = "hi";
-    const status = "hi";
+    const status = "hi"
+    ;
     const newStatus = "done";
-    const id = 6;
+    
+    const id = 2;
+    
     const userinfo = {
         name: "MyName",
         password: "drowssap",
@@ -45,7 +52,7 @@ export default function HeadBar() {
 
     const testApi = async () =>{
         try{
-            await postRequest(
+            await postLaserCutRequest(
                 {
                     group,
                     machine,
@@ -64,8 +71,9 @@ export default function HeadBar() {
     }
     const testApitwo = async () => {
         try {
-            await getRequest();
+            const tempres = await getLaserCutRequest();
             console.log("successful test2")
+            console.log(tempres);
         }
         catch(e){
             console.error(e);
@@ -74,11 +82,10 @@ export default function HeadBar() {
     }
     const testApithree = async () => {
         try{
-            await putRequest({
+            await putLaserCutRequest({
                 id,
                 newStatus
             })
-            console.log("putted")
         }catch(e){
             console.error(e);
             alert("Error testing3");

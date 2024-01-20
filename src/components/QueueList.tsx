@@ -4,7 +4,7 @@ import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 import RequestCard from "./RequestCard";
 // import prisma from "../../prisma/client";
-import useRequest from "@/hooks/useRequest";
+import useRequest from "@/hooks/useLaserCutRequest";
 import { Contrail_One } from "next/font/google";
 type indRequest = {
     group: number
