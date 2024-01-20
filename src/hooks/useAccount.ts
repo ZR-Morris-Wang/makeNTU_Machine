@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
 import type { Account } from "@/context/Account";
 import { PrismaClient } from "@prisma/client";
-import { groupCollapsed } from "console";
 const prisma = new PrismaClient();
 export default function useAccount() {
     const router = useRouter();
