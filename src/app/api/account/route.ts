@@ -40,12 +40,13 @@ export async function POST(req: NextRequest) {
         const user = await prisma.account.create({
             data: {
                 name: name,
-                password: hashedPassword,
+                password: password,
                 permission: permission,
             }
         });
-        const token = jwt.sign({usetId: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
-        return NextResponse.json(token);
+        // const token = jwt.sign({usetId: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
+        // return NextResponse.json(token);
+        return NextResponse.json("OK", {status: 200})
     } catch (error) {
         console.log("error: ", error);
         return NextResponse.json(
@@ -55,7 +56,19 @@ export async function POST(req: NextRequest) {
     }
 }
 
-
+//GET
+export async function GET(req:NextRequest){
+    try{
+        const dbresultReq = await prisma.account.findMany();
+        return NextResponse.json({dbresultReq}, {status: 200});
+    }catch(error){
+        console.log("error: ", error);
+        return NextResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 },
+        );
+    }
+}
 
 export async function SignInApi(req: NextApiRequest, res: NextApiResponse) {
     const { username, password, permission } = req.body;
