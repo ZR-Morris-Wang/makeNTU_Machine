@@ -5,17 +5,25 @@ import { NextResponse, type NextRequest } from "next/server";
 //POST
 export async function POST(req: NextRequest) {
     const data = await req.json();
-    const { group, type, filename, comment } = data;
+    const { group, machine, filename, loadBearing, material, comment, status } = data;
+    console.log(data.group);
     try {
-        const user = await prisma.request.create({
-            data: {
-                group: group,
-                type: type,
+        const user = await prisma.account.update({
+          where:{
+            name: group
+          }, 
+          data: {
+            ThreeDPReq:{
+              create:{
+                machine: machine,
                 filename: filename,
+                loadBearing: loadBearing,
+                material: material,
                 comment: comment,
-                number: 0,
                 status:"pending",
+              }
             }
+          } 
         });
         return NextResponse.json({ status: 200 });
     } catch (error) {
@@ -30,7 +38,7 @@ export async function POST(req: NextRequest) {
 // GET
 export async function GET (req: NextRequest) {
     try{
-        const dbresultReq = await prisma.request.findMany();
+        const dbresultReq = await prisma.threeDPReq.findMany();
         return NextResponse.json({dbresultReq}, {status: 200});
     }catch(error){
         console.log("error: ", error);
@@ -49,7 +57,7 @@ export async function PUT (req: NextRequest) {
     console.log(newStatus);
     const reqID = data.id;
     try{
-      const result = await prisma.request.update({
+      const result = await prisma.threeDPReq.update({
         where: {
           id: reqID,
         },

@@ -3,28 +3,31 @@ import { useRouter } from "next/navigation";
 export default function useThreeDPRequest() {
     const router = useRouter();
 
-    const postLaserCutRequest = async ({
+    //POST
+    const postThreeDPRequest = async ({
         group,
         machine,
         filename,
+        loadBearing,
         material,
         comment,
         status
       }: {
-        group:number
+        group:string
         machine:number
         filename:string
+        loadBearing: boolean,
         material:number[]
         comment?:string
         status?:string
       }) => {
-        // console.log(machine,material)
-        const res = await fetch("/api/reserveforLaser", {
+        const res = await fetch("/api/reserveforThreeDP", {
           method: "POST",
           body: JSON.stringify({
             group,
             machine,
             filename,
+            loadBearing,
             material,
             comment,
             status
@@ -40,8 +43,9 @@ export default function useThreeDPRequest() {
         router.refresh();
       };
     
-      const getLaserCutRequest = async () => {
-      const res = await fetch("/api/reserve", {
+    //GET
+    const getThreeDPRequest = async () => {
+      const res = await fetch("/api/reserveforThreeDP", {
         method: "GET",
       });
       if (!res.ok) {
@@ -51,10 +55,10 @@ export default function useThreeDPRequest() {
       router.refresh();
       return res.json();
     }
-
-    const putLaserCutRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
-      // console.log("putteded")
-      const res = await fetch("/api/reserve", {
+    
+    //PUT
+    const putThreeDPRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
+      const res = await fetch("/api/reserveforThreeDP", {
         method: "PUT",
         body: JSON.stringify({
           id,
@@ -69,8 +73,8 @@ export default function useThreeDPRequest() {
     }
 
     return {
-      postLaserCutRequest,
-      getLaserCutRequest,
-      putLaserCutRequest,
+      postThreeDPRequest,
+      getThreeDPRequest,
+      putThreeDPRequest,
     };
 }

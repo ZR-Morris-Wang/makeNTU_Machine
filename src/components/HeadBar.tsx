@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 import { AccountContext } from "@/context/Account";
 
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import useThreeDPRequest from "@/hooks/useThreeDPRequest";
 import useAccount from "@/hooks/useAccount";
 export default function HeadBar() {
     const router = useRouter();
     const { user } = useContext(AccountContext);
 
     const { postLaserCutRequest, getLaserCutRequest, putLaserCutRequest } = useLaserCutRequest();
+    const { postThreeDPRequest, getThreeDPRequest, putThreeDPRequest } = useThreeDPRequest();
     const { createAccount, getAccount } = useAccount();
 
     const group = "team1";
@@ -17,11 +19,11 @@ export default function HeadBar() {
     const material = [1,2,3,4];
     const filename = "lol";
     const comment = "hi";
-    const status = "hi"
-    ;
-    const newStatus = "done";
+    const status = "hi";
+    const loadBearing = true; 
+    const newStatus = "um...";
     
-    const id = 2;
+    const id = 1;
     
     const userinfo = {
         name: "MyName",
@@ -52,12 +54,13 @@ export default function HeadBar() {
 
     const testApi = async () =>{
         try{
-            await postLaserCutRequest(
+            await postThreeDPRequest(
                 {
                     group,
                     machine,
-                    material,
+                    loadBearing,
                     filename,
+                    material,
                     comment,
                     status,
                 }
@@ -71,7 +74,7 @@ export default function HeadBar() {
     }
     const testApitwo = async () => {
         try {
-            const tempres = await getLaserCutRequest();
+            const tempres = await getThreeDPRequest();
             console.log("successful test2")
             console.log(tempres);
         }
@@ -82,10 +85,11 @@ export default function HeadBar() {
     }
     const testApithree = async () => {
         try{
-            await putLaserCutRequest({
+            await putThreeDPRequest({
                 id,
                 newStatus
             })
+            console.log("successful test3")
         }catch(e){
             console.error(e);
             alert("Error testing3");
