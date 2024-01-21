@@ -1,5 +1,4 @@
 import { useRouter } from "next/navigation";
-import type { Account } from "@/context/Account";
 
 export default function useLaserCutRequest() {
     const router = useRouter();
@@ -20,7 +19,6 @@ export default function useLaserCutRequest() {
         comment?:string
         status?:string
       }) => {
-        // console.log(group, material)
         const res = await fetch("/api/reserveforLaser", {
           method: "POST",
           body: JSON.stringify({
@@ -44,7 +42,6 @@ export default function useLaserCutRequest() {
     
     //GET
     const getLaserCutRequest = async () => {
-      console.log("hehe")
       const res = await fetch("/api/reserveforLaser", {
         method: "GET",
       });

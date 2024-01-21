@@ -6,35 +6,24 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function POST(req: NextRequest) {
     const data = await req.json();
     const { group, machine, filename, material, comment } = data;
-    
     try {
-        // const user = await prisma.laserCutReq.create({
-        //     data: {
-        //         group: groupFinal,
-        //         machine: machine, 
-        //         filename: filename,
-        //         material: material,
-        //         comment: comment,
-        //         status:"pending",
-        //     }
-        // });
-        const groupFinal = await prisma.account.update({
-          where:{
-            name: group
-          },
-          data:{
-            LaserCutReq:{
-              create:{
-                machine: machine, 
-                filename: filename,
-                material: material,
-                comment: comment,
-                status:"pending",
-              }
+      const groupFinal = await prisma.account.update({
+        where:{
+          name: group
+        },
+        data:{
+          LaserCutReq:{
+            create:{
+              machine: machine, 
+              filename: filename,
+              material: material,
+              comment: comment,
+              status:"pending",
             }
           }
-        });
-        return NextResponse.json({ status: 200 });
+        }
+      });
+      return NextResponse.json({ status: 200 });
     } catch (error) {
         console.log("error: ", error);
         return NextResponse.json(
@@ -47,7 +36,7 @@ export async function POST(req: NextRequest) {
 // GET
 export async function GET (req: NextRequest) {
     try{
-        const dbresultReq = await prisma.account.findMany();
+        const dbresultReq = await prisma.laserCutReq.findMany();
         return NextResponse.json({dbresultReq}, {status: 200});
     }catch(error){
         console.log("error: ", error);
