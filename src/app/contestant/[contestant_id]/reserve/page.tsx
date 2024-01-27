@@ -4,6 +4,7 @@ import InputArea from "@/components/ui/InputArea";
 import { useRouter, usePathname } from "next/navigation";
 import { AccountContext } from "@/context/Account";
 import { RequestContext } from "@/context/Request";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function reserve() {
     const { user } = useContext(AccountContext);
@@ -19,7 +20,7 @@ export default function reserve() {
     const [tooLong, setTooLong] = useState(false);
     const [NoteTooLong, setNoteTooLong] = useState(false);
     const [unselected, setUnselected] = useState(false);
-    
+    const [boardList, setBoardList] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
     // if(user?.permission!=='admin' && user?.permission!=='contestant'){
     //     if(!tooLong) {
     //         alert("Please login first!");
@@ -65,6 +66,7 @@ export default function reserve() {
 
     return (
         <div className="m-2 p-3 text-lg flex flex-col items-center justify-center justify-between">
+            
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">隊伍編號：</p>
                 <InputArea
@@ -72,6 +74,7 @@ export default function reserve() {
                     value={"test"}
                     />
             </div>
+            
             <div className="flex items-end w-2/6 h-5" />
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
@@ -88,6 +91,49 @@ export default function reserve() {
             <div className="flex items-end w-2/6 h-5">
                 {unselected && <p className="ml-20 w-3/4  pl-5 text-sm text-red-500 ">請選擇借用機台類型</p>}
             </div>
+            <DragDropContext onDragEnd={(e)=>{console.log(e)}}>
+                <Droppable droppableId="drop-id">
+                    {/* // droppableId: 該 Droppable 的唯一識別ID */}
+
+                    {(provided, snapshot) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                        {/*
+                        provided.innerRef
+                        套件的機制所需, 直接去取用 dom 的 ref, 就是套用的例行公事
+                        */}
+
+                        {boardList.map((item, index) => (
+                        // 以 map 方式渲染每個拖曳卡片 (Draggable)
+                                    
+                        
+                        <Draggable draggableId={item} index={index} >
+                            {/* // draggableId: 該卡片的唯一識別ID */}
+                            {(provided, snapshot) => (
+                            /* 
+                                ...provided.droppableProps
+                                ...provided.draggableProps
+                                ...provided.dragHandleProps 
+                                單純展開其他必要的 props 
+                            */
+                            
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                            >
+                                
+                                {/* 實際上的卡片內容 */}
+                                {item}
+                                {/* 實際上的卡片內容 */}
+
+                            </div>
+                            )}
+                        </Draggable>
+                        ))}
+                    </div>
+                    )}
+                </Droppable>
+                </DragDropContext>
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">檔案名稱：</p>
                 <InputArea
