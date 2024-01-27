@@ -7,18 +7,17 @@ import RequestCard from "./RequestCard";
 import useRequest from "@/hooks/useLaserCutRequest";
 import { Contrail_One } from "next/font/google";
 type indRequest = {
-    group: number
-    type: string
-    number: number
+    groupname: number
     filename: string
-    comment: string
+    material: number[]
     status: string
+    comment: string
 }
 export default function QueueList() {
     const { requests, setRequests } = useContext(RequestContext);
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequest[]>();
-    const { getRequest } = useRequest();
+    const { getLaserCutRequest } = useRequest();
     // useEffect(() => {
     //     const fetchRequests = async () => {
     //         const token = localStorage.getItem("token");
@@ -42,8 +41,9 @@ export default function QueueList() {
     useEffect(() => {
         const gReq = async () => {
             try{
-                const requestListInit = await getRequest();
+                const requestListInit = await getLaserCutRequest();
                 const requestListJson:indRequest[] = requestListInit["dbresultReq"];
+                console.log(requestListJson)
                 setRequestList(requestListJson);
             }
             catch(e){
@@ -52,7 +52,6 @@ export default function QueueList() {
         }
         gReq();
     },[]);
-    // const finalreq = JSON.stringify
     const testRequest = {
         group: "team1",
         filename: "test1",
@@ -76,13 +75,14 @@ export default function QueueList() {
                     <div className="g-4 w-full flex flex-row items-center justify-between border-b-2 border-black">
                         <p className="text-sm">預約組別</p>
                         <p className="text-sm">檔案名稱</p>
-                        <p className="text-sm">列印類型</p>
+                        <p className="text-sm">使用板材</p>
                         <p className="text-sm">列印狀態</p>
+                        <p className="text-sm">備註</p>
                         {/* By tim_2240 Maybe use a table?*/}
                     </div>
                 </div>
-                <RequestCard information={testRequest} isSender={testRequest.group === testUser1.name}/>
-                <RequestCard information={testRequest} isSender={testRequest.group === testUser2.name}/>
+                {/* <RequestCard information={testRequest} isSender={testRequest.group === testUser1.name}/>
+                <RequestCard information={testRequest} isSender={testRequest.group === testUser2.name}/> */}
                 {/* {requests.map((request) => {
                     if (request.status !== "finished") {
                         return (
@@ -97,10 +97,12 @@ export default function QueueList() {
                 {
                     requestList?.map((request)=>(
                         <RequestCard information={{
-                            group:String(request.group),
+                            group:String(request.groupname),
                             filename:request.filename,
-                            type:request.type,
-                            status:request.status
+                            material:request.material,
+                            status:request.status,
+                            comment:request.comment
+
                         }}></RequestCard>
                         )
                     )

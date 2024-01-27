@@ -4,13 +4,15 @@ export type RequestCardProps = {
     information: {
         group: string;
         filename: string;
-        type: string;
+        material: number[];
         status: string;
+        comment: string;
     };
     isSender?: boolean;
 };
 
 export default function RequestCard({ information, isSender }: RequestCardProps) {
+    const materialList = ["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]
     return (
         <>
         <div
@@ -20,8 +22,9 @@ export default function RequestCard({ information, isSender }: RequestCardProps)
         >
             <p className="text-lg font-bold">{information?.group}</p>
             <p className="text-lg font-bold">{information?.filename}</p>
-            <p className="text-lg font-bold">{information?.type}</p>
+            <p className="text-lg font-bold">{materialList[information?.material[1]]}</p>
             <p className="text-lg font-bold">{information?.status}</p>
+            <p className="text-lg font-bold">{information?.comment}</p>
         </div>
         </>
     )
