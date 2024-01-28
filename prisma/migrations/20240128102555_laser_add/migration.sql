@@ -14,9 +14,10 @@ CREATE TABLE "LaserCutReq" (
     "groupname" TEXT NOT NULL,
     "machine" INTEGER NOT NULL,
     "filename" TEXT NOT NULL,
-    "material" INTEGER[],
+    "material" TEXT[],
+    "finalMaterial" TEXT NOT NULL,
     "comment" TEXT,
-    "status" TEXT NOT NULL DEFAULT '已送出請求',
+    "status" TEXT NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "LaserCutReq_pkey" PRIMARY KEY ("id")
@@ -28,10 +29,10 @@ CREATE TABLE "ThreeDPReq" (
     "groupname" TEXT NOT NULL,
     "machine" INTEGER NOT NULL,
     "filename" TEXT NOT NULL,
-    "loadBearing" BOOLEAN NOT NULL DEFAULT false,
+    "loadBearing" BOOLEAN NOT NULL,
     "material" INTEGER[],
     "comment" TEXT,
-    "status" TEXT NOT NULL DEFAULT '已送出請求',
+    "status" TEXT NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ThreeDPReq_pkey" PRIMARY KEY ("id")

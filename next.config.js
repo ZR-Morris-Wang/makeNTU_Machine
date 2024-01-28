@@ -23,3 +23,6 @@ module.exports = nextConfig
 //     return config;
 //   },
 // };
+module.exports = {
+  reactStrictMode: false,
+}
