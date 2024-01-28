@@ -5,7 +5,7 @@ import { NextResponse, type NextRequest } from "next/server";
 //POST
 export async function POST(req: NextRequest) {
     const data = await req.json();
-    const { group, machine, filename, material, comment } = data;
+    const { group, filename, material, comment } = data;
     try {
       const groupFinal = await prisma.account.update({
         where:{
@@ -14,11 +14,12 @@ export async function POST(req: NextRequest) {
         data:{
           LaserCutReq:{
             create:{
-              machine: machine, 
+              machine: 0, 
               filename: filename,
               material: material,
+              finalMaterial: "4",
               comment: comment,
-              status:"pending",
+              status: "",
             }
           }
         }

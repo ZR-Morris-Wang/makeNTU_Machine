@@ -5,7 +5,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { AccountContext } from "@/context/Account";
 import { RequestContext } from "@/context/Request";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
+import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import { MutableRequestCookiesAdapter } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 export default function reserve() {
     const { user } = useContext(AccountContext);
     const { sendRequest } = useContext(RequestContext);
@@ -20,7 +21,9 @@ export default function reserve() {
     const [tooLong, setTooLong] = useState(false);
     const [NoteTooLong, setNoteTooLong] = useState(false);
     const [unselected, setUnselected] = useState(false);
-    const [boardList, setBoardList] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
+    const [material, setMaterial] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
+    const { postLaserCutRequest } = useLaserCutRequest();
+    const group = "team1";
     // if(user?.permission!=='admin' && user?.permission!=='contestant'){
     //     if(!tooLong) {
     //         alert("Please login first!");
@@ -51,19 +54,31 @@ export default function reserve() {
         }
         const pathTemp = pathname.split("/");
         const group = pathTemp[2];
+        // const group = "team1";
         const request = { group, type, filename, comment };
         console.log(request);
         
-        try {
-            sendRequest(request);
-        } catch (error) {
+        // try {
+        //     sendRequest(request);
+        // } catch (error) {
+        //     alert("Sorry, something rong happened. Please try again later.");
+        //     console.log(error);
+        //     return;
+        // }
+        try{
+            await postLaserCutRequest({
+                group,
+                filename,
+                material,
+                comment,
+            })
+        }catch(error){
             alert("Sorry, something rong happened. Please try again later.");
-            console.log(error);
-            return;
+            console.log(error);   
         }
-        router.push(`/contestant/${group}`);
+        // router.push(`/contestant/${group}`);
     }
-
+    
     return (
         <div className="m-2 p-3 text-lg flex flex-col items-center justify-center justify-between">
             
@@ -71,7 +86,7 @@ export default function reserve() {
                 <p className="font-bold w-1/4 text-right">隊伍編號：</p>
                 <InputArea
                     editable={false}
-                    value={"test"}
+                    value={group}
                     />
             </div>
             
@@ -91,7 +106,30 @@ export default function reserve() {
             <div className="flex items-end w-2/6 h-5">
                 {unselected && <p className="ml-20 w-3/4  pl-5 text-sm text-red-500 ">請選擇借用機台類型</p>}
             </div>
-            <DragDropContext onDragEnd={(e)=>{console.log(e)}}>
+            <DragDropContext 
+                onDragEnd ={ (event) => {
+                    const { source, destination } = event;
+                
+                    if (!destination) {
+                      return;
+                    }
+                
+                    // 拷貝新的 items (來自 state) 
+                    let newBoardList = [...material];
+                    
+                        // 用 splice 處理拖曳後資料, 組合出新的 items
+                    // splice(start, deleteCount, item )
+                
+                    // 從 source.index 剪下被拖曳的元素
+                    const [remove] = newBoardList.splice(source.index, 1);
+                    
+                    //在 destination.index 位置貼上被拖曳的元素
+                    newBoardList.splice(destination.index, 0, remove);
+                
+                    // 設定新的 items
+                    setMaterial(newBoardList);
+                  }}
+                >
                 <Droppable droppableId="drop-id">
                     {/* // droppableId: 該 Droppable 的唯一識別ID */}
 
@@ -102,11 +140,11 @@ export default function reserve() {
                         套件的機制所需, 直接去取用 dom 的 ref, 就是套用的例行公事
                         */}
 
-                        {boardList.map((item, index) => (
+                        {material.map((item, index) => (
                         // 以 map 方式渲染每個拖曳卡片 (Draggable)
                                     
                         
-                        <Draggable draggableId={item} index={index} >
+                        <Draggable key={item} draggableId={item} index={index} >
                             {/* // draggableId: 該卡片的唯一識別ID */}
                             {(provided, snapshot) => (
                             /* 

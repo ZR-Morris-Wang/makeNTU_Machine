@@ -20,15 +20,16 @@ model Account {
 }
 
 model LaserCutReq {
-  id          Int         @id @default(autoincrement())
-  group       Account     @relation(fields: [groupname], references: [name])
-  groupname   String
-  machine     Int         // e.g. 0, 1
-  filename    String  
-  material    Int[]       // e.g. 0: 3mm 密集, 1: 5mm 密集, 2: 3mm 壓克力, 3: 5mm 壓克力
-  comment     String?
-  status      String      @default("已送出請求")
-  createAt    DateTime    @default(now())
+  id            Int         @id @default(autoincrement())
+  group         Account     @relation(fields: [groupname], references: [name])
+  groupname     String
+  machine       Int         // e.g. 0, 1
+  filename      String  
+  material      String[]       // e.g. 0: 3mm 密集, 1: 5mm 密集, 2: 3mm 壓克力, 3: 5mm 壓克力
+  finalMaterial String
+  comment       String?
+  status        String      
+  createAt      DateTime    @default(now())
 }
 
 model ThreeDPReq {
@@ -37,9 +38,9 @@ model ThreeDPReq {
   groupname   String
   machine     Int         // e.g. 0, 1
   filename    String
-  loadBearing Boolean     @default(false)  
+  loadBearing Boolean     
   material    Int[]       // e.g. 0: PLA, 1: Other
   comment     String?
-  status      String      @default("已送出請求")
+  status      String      
   createAt    DateTime    @default(now())
 }

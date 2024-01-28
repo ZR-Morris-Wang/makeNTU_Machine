@@ -6,28 +6,22 @@ export default function useLaserCutRequest() {
     //POST
     const postLaserCutRequest = async ({
         group,
-        machine,
         filename,
         material,
         comment,
-        status
       }: {
         group:string
-        machine:number
         filename:string
-        material:number[]
+        material:string[]
         comment?:string
-        status?:string
       }) => {
         const res = await fetch("/api/reserveforLaser", {
           method: "POST",
           body: JSON.stringify({
             group,
-            machine,
             filename,
             material,
             comment,
-            status
           }),
         });
         if (!res.ok) {
