@@ -4,8 +4,10 @@ import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 // import RequestCard from "./RequestCard";
 // import prisma from "../../prisma/client";
+
 import useRequest from "@/hooks/useLaserCutRequest";
 import { usePathname } from "next/navigation";
+
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -15,20 +17,21 @@ import { TableHead, TableRow } from "@mui/material";
 
 
 type indRequest = {
+    id: number
     groupname: number
     filename: string
     material: number[]
     status: string
     comment: string
 }
-export default function QueueList() {
+export default function QueueList() {      
     const { requests, setRequests } = useContext(RequestContext);
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequest[]>();
     const pathname = usePathname();
     const pathTemp = pathname.split("/");
     const group = pathTemp[2];
-
+      
     const { getLaserCutRequest } = useRequest();
     // useEffect(() => {
     //     const fetchRequests = async () => {
@@ -89,9 +92,9 @@ export default function QueueList() {
                         <p className="text-sm">檔案名稱</p>
                         <p className="text-sm">使用板材</p>
                         <p className="text-sm">列印狀態</p>
-                        <p className="text-sm">備註</p> */}
-                        {/* By tim_2240 Maybe use a table?*/}
-                    {/* </div>
+                        <p className="text-sm">備註</p>
+                        {/* By tim_2240 Maybe use a table?
+                    </div>
                 </div> */}
                 {/* <RequestCard information={testRequest} isSender={testRequest.group === testUser1.name}/>
                 <RequestCard information={testRequest} isSender={testRequest.group === testUser2.name}/> */}
@@ -105,7 +108,7 @@ export default function QueueList() {
                             />
                         )}
                     return null;
-                })} */}
+                })}
                 {
                     // requestList?.map((request)=>(
                         // <RequestCard information={{
@@ -120,14 +123,16 @@ export default function QueueList() {
                     //     )
                     // )
                 }
-            {/* </div>
+            </div>*/}
+            {/* </div> 
         </div> */}
+
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
                 <TableHead>
                 </TableHead>
                 <TableBody>
-                    <TableRow>
+                    <TableRow key="head">
                         <TableCell>預約組別</TableCell>
                         <TableCell>檔案名稱</TableCell>
                         <TableCell>使用板材</TableCell>
@@ -144,7 +149,7 @@ export default function QueueList() {
                             //     comment:request.comment
 
                             // }}></RequestCard>
-                        <TableRow className={String(request.groupname)===group ? "bg-gray-500" : ""}>
+                        <TableRow className={String(request.groupname)===group ? "bg-gray-500" : "" } key={request.id}>
                             <TableCell>{String(request.groupname)}</TableCell>
                             <TableCell>{request.filename}</TableCell>
                             <TableCell>{request.material}</TableCell>
@@ -157,6 +162,7 @@ export default function QueueList() {
                 </TableBody>
             </Table>
         </TableContainer>
+
         </>
     )
 }

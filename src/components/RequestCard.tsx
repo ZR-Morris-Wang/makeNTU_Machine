@@ -1,9 +1,11 @@
 import React from "react";
 import { Tab, TableCell } from "@mui/material";
+import Table from '@mui/material/Table';
 import TableRow from "@mui/material";
-
+import TableBody from '@mui/material/TableBody';
 export type RequestCardProps = {
     information: {
+        id: number;
         group: string;
         filename: string;
         material: number[];
@@ -28,13 +30,17 @@ export default function RequestCard({ information, isSender }: RequestCardProps)
         </div> */}
     return (
         <>
-            <TableRow>
-                <TableCell>{information?.group}</TableCell>
-                <TableCell>{information?.filename}</TableCell>
-                <TableCell>{materialList[information?.material[1]]}</TableCell>
-                <TableCell>{information?.status}</TableCell>
-                <TableCell>{information?.comment}</TableCell>
-            </TableRow>
+            <Table>
+                <TableBody>
+                    <TableRow key={information.id}>
+                        <TableCell>{information?.group}</TableCell>
+                        <TableCell>{information?.filename}</TableCell>
+                        <TableCell>{materialList[information?.material[1]]}</TableCell>
+                        <TableCell>{information?.status}</TableCell>
+                        <TableCell>{information?.comment}</TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
         </>
     )
 }
