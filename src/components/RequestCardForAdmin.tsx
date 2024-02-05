@@ -14,7 +14,7 @@ export type RequestCardProps = {
 export default function RequestCard({ information }: RequestCardProps) {
     const [ commentDialogOpen , setCommentDialogOpen ] = useState(false);
     const [ statusDialogOpen, setStatusDialogOpen ] = useState(false);
-
+    const Button = require('@mui/material/Button').default
     const setRequestDead = () => {
 
     }
@@ -35,6 +35,9 @@ export default function RequestCard({ information }: RequestCardProps) {
             >
                 <p className="text-lg font-bold whitespace-no-wrap overflow-hidden overflow-ellipsis">{information?.comment}</p>
             </button>
+            <Button onClick={() => setCommentDialogOpen(true)}>
+                <p className="text-lg font-bold whitespace-no-wrap overflow-hidden overflow-ellipsis">{information?.comment}</p>
+            </Button>
             <button
                 className="m-3 bg-white text-black hover:text-white hover:bg-red-600 rounded border-black border-2"
                 onClick={() => setRequestDead()}

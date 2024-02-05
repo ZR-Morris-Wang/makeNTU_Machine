@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 import RequestCardForAdmin from "./RequestCardForAdmin";
+import CommentDialog from "./CommentDialog";
 import useRequest from "@/hooks/useLaserCutRequest";
 
 import TableContainer from '@mui/material/TableContainer';
@@ -11,8 +12,11 @@ import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import { TableHead, TableRow } from "@mui/material";
-
+import { FormControl, TableHead, TableRow } from "@mui/material";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import formControl from "@mui/material";
 type indRequestForAdmin = {
     id: number
     groupname: number
@@ -34,7 +38,9 @@ export default function QueueListForAdmin() {
         comment: "test1",
         status: "waiting",
     };
-
+    const Button = require('@mui/material/Button').default
+    const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+    const [dialogString, setDialogString] = useState("");
     useEffect(() => {
         const gReq = async () => {
             try{
@@ -71,7 +77,7 @@ export default function QueueListForAdmin() {
                         />
                     )}
                     return null;
-            })} *
+            })} 
         </div> */}
 
         <TableContainer component={Paper}>
@@ -83,7 +89,8 @@ export default function QueueListForAdmin() {
                         <TableCell>預約組別</TableCell>
                         <TableCell>檔案名稱</TableCell>
                         <TableCell>使用機台</TableCell>
-                        <TableCell>使用板材</TableCell>
+                        <TableCell sx={{maxWidth:"50px"}}>板材志願序</TableCell>
+                        <TableCell>最終板材</TableCell>
                         <TableCell>列印狀態</TableCell>
                         <TableCell>備註</TableCell>
                     </TableRow>
@@ -101,9 +108,26 @@ export default function QueueListForAdmin() {
                             <TableCell>{String(request.groupname)}</TableCell>
                             <TableCell>{request.filename}</TableCell>
                             <TableCell>{request.machine}</TableCell>
-                            <TableCell>{request.material}</TableCell>
+                            <TableCell>{request.material.join('\r')}</TableCell>
+                            
+                            <TableCell sx={{minWidth:"150px"}}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                                        <Select
+                                            // labelId="demo-simple-select-label"
+                                            // id="demo-simple-select"
+                                            // value="test"
+                                            label="Age"
+                                            // onChange={handleChange}
+                                            >   
+                                            {request.material.map((eachMaterial)=>(<MenuItem value={eachMaterial}>{eachMaterial}</MenuItem>))}
+                                        </Select>
+                                </FormControl>
+                            </TableCell>
                             <TableCell>{request.status}</TableCell>
-                            <TableCell>{request.comment}</TableCell>
+                            <TableCell>
+                                <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
+                            </TableCell>
                         </TableRow>
                             )
                         )
@@ -111,7 +135,7 @@ export default function QueueListForAdmin() {
                 </TableBody>
             </Table>
         </TableContainer>
-
+        <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
         </>
     )
 }
