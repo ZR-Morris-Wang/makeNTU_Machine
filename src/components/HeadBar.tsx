@@ -10,7 +10,8 @@ export default function HeadBar() {
     const router = useRouter();
     const { user } = useContext(AccountContext);
 
-    const { postLaserCutRequest, getLaserCutRequest, putLaserCutRequest } = useLaserCutRequest();
+    const { postLaserCutRequest, getLaserCutRequest, putLaserCutRequestStatus
+    ,putLaserCutRequestMachine, putLaserCutRequestMaterial } = useLaserCutRequest();
     const { postThreeDPRequest, getThreeDPRequest, putThreeDPRequest } = useThreeDPRequest();
     const { createAccount, getAccount } = useAccount();
 
@@ -22,7 +23,8 @@ export default function HeadBar() {
     const status = "hi";
     const loadBearing = true; 
     const newStatus = "um...";
-    
+    const newMachine = 3;
+    const newFinalMaterial = "3mm";
     const id = 1;
     
     const userinfo = {
@@ -85,9 +87,9 @@ export default function HeadBar() {
     }
     const testApithree = async () => {
         try{
-            await putThreeDPRequest({
+            await putLaserCutRequestMaterial({
                 id,
-                newStatus
+                newFinalMaterial
             })
             console.log("successful test3")
         }catch(e){

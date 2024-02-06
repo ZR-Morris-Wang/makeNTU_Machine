@@ -15,14 +15,15 @@ import TableCell from '@mui/material/TableCell';
 import { FormControl, TableHead, TableRow } from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import formControl from "@mui/material";
+import Select from '@mui/material/Select';
+
 type indRequestForAdmin = {
     id: number
     groupname: number
     machine: number
     filename: string
     material: number[]
+    finalMaterial: string
     status: string
     comment: string
 }
@@ -31,7 +32,8 @@ export default function QueueListForAdmin() {
     const { requests } = useContext(RequestContext);
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequestForAdmin[]>();
-    const { getLaserCutRequest } = useRequest(); 
+    const { getLaserCutRequest, putLaserCutRequestMachine,
+    putLaserCutRequestMaterial, putLaserCutRequestStatus } = useRequest(); 
     const testRequest = {
         filename: "test1",
         type: "3DP",
@@ -41,6 +43,7 @@ export default function QueueListForAdmin() {
     const Button = require('@mui/material/Button').default
     const [commentDialogOpen, setCommentDialogOpen] = useState(false);
     const [dialogString, setDialogString] = useState("");
+    
     useEffect(() => {
         const gReq = async () => {
             try{
@@ -55,6 +58,30 @@ export default function QueueListForAdmin() {
         }
         gReq();
     },[]);
+    
+    const handleMaterialChange = async (id: number, newFinalMaterial: string) => {
+        try{
+            await putLaserCutRequestMaterial({
+                id,
+                newFinalMaterial
+            })
+            console.log("successful test3")
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+    const handleMachineChange = async(id: number, newMachine: number) => {
+        try{
+            await putLaserCutRequestMachine({
+                id,
+                newMachine
+            })
+            console.log("successful test3")
+        }catch(e){
+            console.error(e);
+        }
+    }
 
     return (
         <>
@@ -89,7 +116,7 @@ export default function QueueListForAdmin() {
                         <TableCell>預約組別</TableCell>
                         <TableCell>檔案名稱</TableCell>
                         <TableCell>使用機台</TableCell>
-                        <TableCell sx={{maxWidth:"50px"}}>板材志願序</TableCell>
+                        <TableCell>板材志願序</TableCell>
                         <TableCell>最終板材</TableCell>
                         <TableCell>列印狀態</TableCell>
                         <TableCell>備註</TableCell>
@@ -107,23 +134,42 @@ export default function QueueListForAdmin() {
                         <TableRow key={request.id}>
                             <TableCell>{String(request.groupname)}</TableCell>
                             <TableCell>{request.filename}</TableCell>
-                            <TableCell>{request.machine}</TableCell>
-                            <TableCell>{request.material.join('\r')}</TableCell>
                             
-                            <TableCell sx={{minWidth:"150px"}}>
+                            <TableCell>
                                 <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                                    <InputLabel id="demo-simple-select-label">機台編號</InputLabel>
                                         <Select
                                             // labelId="demo-simple-select-label"
                                             // id="demo-simple-select"
-                                            // value="test"
-                                            label="Age"
-                                            // onChange={handleChange}
+                                            defaultValue={String(request.machine)}
+                                            label="機台編號"
+                                            onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
+                                            <MenuItem value={0}>未安排</MenuItem>
+                                            <MenuItem value={3}>已完成</MenuItem>
+                                            <MenuItem value={1}>{Number(1)}</MenuItem>
+                                            <MenuItem value={2}>{Number(2)}</MenuItem>
+                                        </Select>
+                                </FormControl>
+                            </TableCell>
+
+                            <TableCell sx={{whiteSpace:"pre"}}>{request.material.map(
+                                (mat)=>((request.material.indexOf(mat)+1)+'. '+mat+'\n'))}</TableCell>
+                            
+                            <TableCell>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">板材種類</InputLabel>
+                                        <Select
+                                            // labelId="demo-simple-select-label"
+                                            // id="demo-simple-select"
+                                            defaultValue={request.finalMaterial}
+                                            label="板材種類"
+                                            onChange={(e)=>{handleMaterialChange(request.id,e.target.value as string);}}
                                             >   
                                             {request.material.map((eachMaterial)=>(<MenuItem value={eachMaterial}>{eachMaterial}</MenuItem>))}
                                         </Select>
                                 </FormControl>
                             </TableCell>
+
                             <TableCell>{request.status}</TableCell>
                             <TableCell>
                                 <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    

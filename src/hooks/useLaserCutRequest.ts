@@ -48,12 +48,45 @@ export default function useLaserCutRequest() {
     }
     
     //PUT
-    const putLaserCutRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
+    const putLaserCutRequestStatus = async ({id, newStatus}:
+      {id: number, newStatus: string}) => {
       const res = await fetch("/api/reserveforLaser", {
         method: "PUT",
         body: JSON.stringify({
           id,
-          newStatus
+          newStatus,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+    }
+
+    const putLaserCutRequestMachine = async ({id, newMachine}:
+      {id: number, newMachine: number}) => {
+      const res = await fetch("/api/reserveforLaser", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          newMachine,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+    }
+
+    const putLaserCutRequestMaterial = async ({id, newFinalMaterial}:
+      {id: number, newFinalMaterial: string}) => {
+      const res = await fetch("/api/reserveforLaser", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          newFinalMaterial,
         }),
       });
       if (!res.ok) {
@@ -66,6 +99,8 @@ export default function useLaserCutRequest() {
     return {
       postLaserCutRequest,
       getLaserCutRequest,
-      putLaserCutRequest,
+      putLaserCutRequestStatus,
+      putLaserCutRequestMachine,
+      putLaserCutRequestMaterial,
     };
 }
