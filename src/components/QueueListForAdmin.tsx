@@ -6,6 +6,7 @@ import { AccountContext } from "@/context/Account";
 import RequestCardForAdmin from "./RequestCardForAdmin";
 import CommentDialog from "./CommentDialog";
 import useRequest from "@/hooks/useLaserCutRequest";
+import Status from "@/components/Status"
 
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
@@ -170,7 +171,7 @@ export default function QueueListForAdmin() {
                                 </FormControl>
                             </TableCell>
 
-                            <TableCell>{request.status}</TableCell>
+                            <TableCell><Status id={request.id} isAdmin={false} initialState="pending"></Status></TableCell>
                             <TableCell>
                                 <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
                             </TableCell>
