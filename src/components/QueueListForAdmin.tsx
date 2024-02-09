@@ -154,7 +154,7 @@ export default function QueueListForAdmin() {
                             </TableCell>
 
                             <TableCell sx={{whiteSpace:"pre"}}>{request.material.map(
-                                (mat)=>((request.material.indexOf(mat)+1)+'. '+mat+'\n'))}</TableCell>
+                                (mat)=>(<p className={request.material.indexOf(mat)===0?"text-red-400":""}>{(request.material.indexOf(mat)+1)+'. '+mat}</p>))}</TableCell>
                             
                             <TableCell>
                                 <FormControl fullWidth>
