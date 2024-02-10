@@ -5,7 +5,7 @@ import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 import RequestCardForAdmin from "./RequestCardForAdmin";
 import CommentDialog from "./CommentDialog";
-import useRequest from "@/hooks/useLaserCutRequest";
+import useLaserCutRequest from "@/hooks/useLaserCutRequest";
 import Status from "@/components/Status"
 
 import TableContainer from '@mui/material/TableContainer';
@@ -23,7 +23,7 @@ type indRequestForAdmin = {
     groupname: number
     machine: number
     filename: string
-    material: number[]
+    material: string[]
     finalMaterial: string
     status: string
     comment: string
@@ -34,7 +34,7 @@ export default function QueueListForAdmin() {
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequestForAdmin[]>();
     const { getLaserCutRequest, putLaserCutRequestMachine,
-    putLaserCutRequestMaterial, putLaserCutRequestStatus } = useRequest(); 
+    putLaserCutRequestMaterial, putLaserCutRequestStatus } = useLaserCutRequest(); 
     const testRequest = {
         filename: "test1",
         type: "3DP",
@@ -48,9 +48,9 @@ export default function QueueListForAdmin() {
     useEffect(() => {
         const gReq = async () => {
             try{
+                //alert("rerender!")
                 const requestListInit = await getLaserCutRequest();
                 const requestListJson:indRequestForAdmin[] = requestListInit["dbresultReq"];
-                console.log(requestListJson)
                 setRequestList(requestListJson);
             }
             catch(e){
@@ -66,7 +66,7 @@ export default function QueueListForAdmin() {
                 id,
                 newFinalMaterial
             })
-            console.log("successful test3")
+            // console.log("successful test3")
         }catch(e){
             console.error(e);
         }
@@ -78,7 +78,7 @@ export default function QueueListForAdmin() {
                 id,
                 newMachine
             })
-            console.log("successful test3")
+            // console.log("successful test3")
         }catch(e){
             console.error(e);
         }
@@ -171,7 +171,7 @@ export default function QueueListForAdmin() {
                                 </FormControl>
                             </TableCell>
 
-                            <TableCell><Status id={request.id} isAdmin={false} initialState="pending"></Status></TableCell>
+                            <TableCell><Status id={request.id} isAdmin={true} initialState={request.status}></Status></TableCell>
                             <TableCell>
                                 <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
                             </TableCell>

@@ -4,7 +4,7 @@ import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 // import RequestCard from "./RequestCard";
 // import prisma from "../../prisma/client";
-
+import Status from "./Status";
 import useRequest from "@/hooks/useLaserCutRequest";
 import { usePathname } from "next/navigation";
 
@@ -20,7 +20,8 @@ type indRequest = {
     id: number
     groupname: number
     filename: string
-    material: number[]
+    material: string[]
+    finalMaterial: string
     status: string
     comment: string
 }
@@ -153,7 +154,7 @@ export default function QueueList() {
                             <TableCell>{String(request.groupname)}</TableCell>
                             <TableCell>{request.filename}</TableCell>
                             <TableCell>{request.material}</TableCell>
-                            <TableCell>{request.status}</TableCell>
+                            <TableCell><Status id={request.id} isAdmin={false} initialState={request.status}></Status></TableCell>
                             <TableCell>{request.comment}</TableCell>
                         </TableRow>
                             )
