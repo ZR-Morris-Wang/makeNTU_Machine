@@ -15,6 +15,7 @@ export default function useLaserCutRequest() {
         material:string[]
         comment?:string
       }) => {
+        // console.log(material)
         const res = await fetch("/api/reserveforLaser", {
           method: "POST",
           body: JSON.stringify({
@@ -26,7 +27,9 @@ export default function useLaserCutRequest() {
         });
         if (!res.ok) {
           const body = await res.json();
+          console.log("notok")
           throw new Error(body.error);
+          
         }
         // router.refresh() is a Next.js function that refreshes the page without
         // reloading the page. This is useful for when we want to update the UI

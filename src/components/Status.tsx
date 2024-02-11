@@ -10,25 +10,28 @@ type StatusProps = {
 
 export default function( {id, isAdmin, initialState}: StatusProps ){
     const router = useRouter();
-    const [current, setCurrent] = useState(0);
-    const statusArray = ['等','到','過','切','完'];
-    const {putLaserCutRequestStatus} = useLaserCutRequest();
-    const [countdown, setCountdown] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(10)
+    const [ current, setCurrent ] = useState(0);
+    const statusArray = ['等','到','切','完'];
+    const { putLaserCutRequestStatus } = useLaserCutRequest();
+    const [ countdown, setCountdown ] = useState(false);
+    const [ timeLeft, setTimeLeft ] = useState(100)
+    const [ timer, setTimer ] = useState<NodeJS.Timeout>();
+    const [ wrong, setWrong ] = useState(false);
     useEffect(()=>{
         if (statusArray.includes(initialState)){
             setCurrent(statusArray.indexOf(initialState))
         }
     },[])
-
-    useEffect(function startTime () {
+    
+    
+    useEffect(() => {
+        setTimeLeft(100)
         if(countdown === true){
-            // setTimeLeft(10)
-            setTimeLeft((prev)=>(prev-1))
-            setInterval(startTime, 1000);          
+            const countDownByState = () => setTimeLeft((prev)=>(prev-1));
+            setTimer(setInterval(countDownByState, 1000));
         }
         else{
-            setTimeLeft(10)
+            clearInterval(timer);
         }
     },[countdown])
 
@@ -48,6 +51,7 @@ export default function( {id, isAdmin, initialState}: StatusProps ){
 
     return(
         <>
+            {/* <button onClick={()=>{clearInterval(timer);alert("stopped!")}}>stop!</button> */}
             {isAdmin === true ? 
             <>
                 <div className="inline-flex flex-row">
@@ -70,7 +74,7 @@ export default function( {id, isAdmin, initialState}: StatusProps ){
                     }
                 }}>左</button>
                 <button onClick={ ()=>{
-                    if (current !== 4){
+                    if (current !== 3){
                         setCurrent((prev)=>(prev+1));
                         handleStatusChange(id,statusArray[current+1] )
                     }
@@ -81,7 +85,7 @@ export default function( {id, isAdmin, initialState}: StatusProps ){
                         setCountdown(false)
                     }
                 } }>右</button>
-                <p className={countdown? "block" : "hidden"}>{timeLeft}</p>
+                <p className={countdown? "block" : "hidden"}>{String(Math.trunc(timeLeft/60))+":"+String(timeLeft%60)}</p>
             </> :
             <>
                 <div className="inline-flex flex-row">
@@ -90,6 +94,7 @@ export default function( {id, isAdmin, initialState}: StatusProps ){
                     <div className="w-min text-red-400">{status}</div> : <div className="w-min">{status}</div>)
                     )}
                 </div>
+                <p className={countdown? "block" : "hidden"}>{String(Math.trunc(timeLeft/60))+":"+String(timeLeft%60)}</p>
             </>
             }
         </>

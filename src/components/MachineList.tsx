@@ -11,6 +11,8 @@ import TableCell from '@mui/material/TableCell';
 import { FormControl, TableHead, TableRow } from "@mui/material";
 import CommentDialog from "./CommentDialog";
 import { request } from "http";
+import { useRouter } from "next/navigation";
+import FinishedDialog from "./FinishedDialog";
 export type MachineListProps = {
     index: number;
 }
@@ -27,12 +29,19 @@ type indRequestForMachine = {
 
 export default function MachineList({ index }: MachineListProps) {
     const { requests } = useContext(RequestContext);
-    const [ requestList, setRequestList ] = useState<indRequestForMachine[]>();
-    const { getLaserCutRequest, putLaserCutRequestMachine,
-    putLaserCutRequestMaterial, putLaserCutRequestStatus } = useLaserCutRequest(); 
     const Button = require('@mui/material/Button').default
+    const router = useRouter();
+    // const FinishedDialog = require("./FinishedDialog").default
+    const { getLaserCutRequest, putLaserCutRequestMachine,
+        putLaserCutRequestMaterial, putLaserCutRequestStatus } = useLaserCutRequest(); 
+    
+    const [ requestList, setRequestList ] = useState<indRequestForMachine[]>();
     const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+    const [ dialogOpen, setDialogOpen] = useState(false);
     const [dialogString, setDialogString] = useState("");
+    const [name, setName] = useState(0);
+    const [groupID, setGroupID] = useState(0);
+    
 
     useEffect(() => {
         const gReq = async () => {
@@ -48,6 +57,18 @@ export default function MachineList({ index }: MachineListProps) {
         gReq();
     },[]);
 
+    const handleStatusChange =  async(id: number, newStatus: string) => {
+        try{
+            await putLaserCutRequestStatus({
+                id,
+                newStatus
+            })
+            console.log("successful test3")
+        }catch(e){
+            console.error(e);
+        }
+        router.refresh();
+    }
     // const testRequest = {
     //     filename: "test1",
     //     type: "3DP",
@@ -114,14 +135,24 @@ export default function MachineList({ index }: MachineListProps) {
                                 //     comment:request.comment
 
                                 // }}></RequestCard>
-                                request.machine === index ?
+                               ( request.machine === index && request.status === "切")?
                             <TableRow key={request.id}>
                                 <TableCell>{String(request.groupname)}</TableCell>
                                 <TableCell>{request.filename}</TableCell>
                                 <TableCell>{request.finalMaterial}</TableCell>
-                                <TableCell>切</TableCell>
                                 <TableCell>
-                                    <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
+                                    {request.status}
+                                    <Button onClick={()=>{
+                                            setDialogOpen(true);
+                                            setGroupID(request.id);
+                                            setName(request.groupname);
+                                        }}>完成</Button>
+                                </TableCell>
+                                <TableCell>
+                                    <Button onClick={()=>{
+                                            setCommentDialogOpen(true);
+                                            setDialogString(request.comment)
+                                        }}>{request.comment}</Button>    
                                 </TableCell>
                             </TableRow>
                             :
@@ -133,6 +164,7 @@ export default function MachineList({ index }: MachineListProps) {
                 </Table>
             </TableContainer>
             <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
+            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)}/>
         </>
     )
 }

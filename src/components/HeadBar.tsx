@@ -1,5 +1,5 @@
 'use client'
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AccountContext } from "@/context/Account";
 
@@ -15,9 +15,28 @@ export default function HeadBar() {
     const { postThreeDPRequest, getThreeDPRequest, putThreeDPRequest } = useThreeDPRequest();
     const { createAccount, getAccount } = useAccount();
 
+    
+    const [countdown, setCountdown] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(10)
+    const [timer, setTimer] = useState<number>();
+    useEffect(() => {
+        setTimeLeft(10)
+        if(countdown === true){
+            const countDownByState = () => setTimeLeft((prev)=>(prev-1));
+            setTimer(window.setInterval(countDownByState, 1000));
+            console.log(`111 ${timer}`);
+        }
+        if(countdown === false){
+            console.log(`clear ${timer}`);
+            window.clearInterval(timer);
+        }
+    },[countdown])
+    // const testdown = () => setTimeLeft((prev)=>(prev-1));
+    // const timertest = setInterval(testdown, 1000);    
+
     const group = "team1";
     const machine = 1;
-    const material = [1,2,3,4];
+    const material = ["1","2","3","4"];
     const filename = "lol";
     const comment = "hi";
     const status = "hi";
@@ -56,15 +75,12 @@ export default function HeadBar() {
 
     const testApi = async () =>{
         try{
-            await postThreeDPRequest(
+            await postLaserCutRequest(
                 {
                     group,
-                    machine,
-                    loadBearing,
                     filename,
                     material,
                     comment,
-                    status,
                 }
             )
             console.log("successful test")
@@ -120,6 +136,10 @@ export default function HeadBar() {
                 <button onClick={()=>{testApitwo()}} className="hover:bg-red-500">test2</button>
                 <button onClick={()=>{testApithree()}} className="hover:bg-purple-500">test3</button>
                 <button onClick={()=>{testApi4()}} className="hover:bg-purple-500">test4</button>
+
+                <button onClick={()=>{setCountdown(true)}} className="hover:bg-purple-500">開始</button>
+                <button onClick={()=>{setCountdown(false)}} className="hover:bg-purple-500">停止</button>
+                <p>{timeLeft}</p>
             </div>
         </div>
         </>
