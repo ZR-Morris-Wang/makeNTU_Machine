@@ -18,6 +18,7 @@ CREATE TABLE "LaserCutReq" (
     "finalMaterial" TEXT NOT NULL,
     "comment" TEXT,
     "status" TEXT NOT NULL,
+    "timeleft" INTEGER NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "LaserCutReq_pkey" PRIMARY KEY ("id")

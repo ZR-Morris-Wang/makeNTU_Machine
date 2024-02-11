@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
             finalMaterial: "",
             comment: comment,
             status: "",
+            timeleft: 0,
           }
         }
       }

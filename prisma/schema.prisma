@@ -29,6 +29,7 @@ model LaserCutReq {
   finalMaterial String
   comment       String?
   status        String      
+  timeleft      Int
   createAt      DateTime    @default(now())
 }
 
@@ -41,6 +42,7 @@ model ThreeDPReq {
   loadBearing Boolean     
   material    Int[]       // e.g. 0: PLA, 1: Other
   comment     String?
-  status      String      
+  status      String    
+  timeleft    Int  
   createAt    DateTime    @default(now())
 }
