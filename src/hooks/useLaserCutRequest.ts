@@ -99,11 +99,28 @@ export default function useLaserCutRequest() {
       router.refresh();
     }
 
+    const putLaserCutRequestTimeLeft = async ({id, newTimeLeft}:
+      {id: number, newTimeLeft: Date}) => {
+      const res = await fetch("/api/reserveforLaser", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          newTimeLeft,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+    }
+
     return {
       postLaserCutRequest,
       getLaserCutRequest,
       putLaserCutRequestStatus,
       putLaserCutRequestMachine,
       putLaserCutRequestMaterial,
+      putLaserCutRequestTimeLeft
     };
 }

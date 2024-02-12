@@ -27,6 +27,7 @@ type indRequestForAdmin = {
     finalMaterial: string
     status: string
     comment: string
+    timeleft: Date
 }
 
 export default function QueueListForAdmin() {
@@ -83,7 +84,7 @@ export default function QueueListForAdmin() {
             console.error(e);
         }
     }
-
+    
     return (
         <>
         {/* <div className="m-2 max-h-[90vh] w-1/2 flex flex-col items-center justify-start bg-white rounded border-2 border-black overflow-y-auto">
@@ -171,7 +172,7 @@ export default function QueueListForAdmin() {
                                 </FormControl>
                             </TableCell>
 
-                            <TableCell><Status id={request.id} isAdmin={true} initialState={request.status}></Status></TableCell>
+                            <TableCell><Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft}></Status></TableCell>
                             <TableCell>
                                 <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
                             </TableCell>
