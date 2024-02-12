@@ -31,11 +31,11 @@ export default function MachineList({ index }: MachineListProps) {
     const { requests } = useContext(RequestContext);
     const Button = require('@mui/material/Button').default
     const router = useRouter();
-    // const FinishedDialog = require("./FinishedDialog").default
     const { getLaserCutRequest, putLaserCutRequestMachine,
         putLaserCutRequestMaterial, putLaserCutRequestStatus } = useLaserCutRequest(); 
     
     const [ requestList, setRequestList ] = useState<indRequestForMachine[]>();
+    
     const [commentDialogOpen, setCommentDialogOpen] = useState(false);
     const [ dialogOpen, setDialogOpen] = useState(false);
     const [dialogString, setDialogString] = useState("");

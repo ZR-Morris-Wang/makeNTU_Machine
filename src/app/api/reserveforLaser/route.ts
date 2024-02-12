@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
   const data = await req.json();
   const { group, filename, material, comment } = data;
   try {
+    const test = new Date();
     const groupFinal = await prisma.account.update({
       where:{
         name: group
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
             finalMaterial: "",
             comment: comment,
             status: "",
-            timeleft: 0,
+            timeleft: test,
           }
         }
       }
@@ -57,7 +58,7 @@ export async function GET (req: NextRequest) {
 //PUT
 export async function PUT (req: NextRequest) {
   const data = await req.json();
-  const {newStatus, newMachine, newFinalMaterial} = data;
+  const {newStatus, newMachine, newFinalMaterial, newTimeLeft} = data;
   // console.log(newStatus);
   const reqID = data.id;
   try{
@@ -69,6 +70,7 @@ export async function PUT (req: NextRequest) {
         status: newStatus,
         machine: newMachine,
         finalMaterial: newFinalMaterial,
+        timeleft: newTimeLeft
       }
     })
     return NextResponse.json({ status: 200 });

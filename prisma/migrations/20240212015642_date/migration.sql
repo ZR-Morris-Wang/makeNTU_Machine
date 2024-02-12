@@ -18,7 +18,7 @@ CREATE TABLE "LaserCutReq" (
     "finalMaterial" TEXT NOT NULL,
     "comment" TEXT,
     "status" TEXT NOT NULL,
-    "timeleft" INTEGER NOT NULL,
+    "timeleft" TIMESTAMP(3) NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "LaserCutReq_pkey" PRIMARY KEY ("id")
@@ -34,6 +34,7 @@ CREATE TABLE "ThreeDPReq" (
     "material" INTEGER[],
     "comment" TEXT,
     "status" TEXT NOT NULL,
+    "timeleft" TIMESTAMP(3) NOT NULL,
     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ThreeDPReq_pkey" PRIMARY KEY ("id")
