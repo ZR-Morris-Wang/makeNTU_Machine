@@ -17,7 +17,7 @@ export type MachineListProps = {
     index: number;
 }
 
-type indRequestForMachine = {
+export type indRequestForMachine = {
     id: number
     groupname: number
     machine: number
