@@ -101,7 +101,8 @@ export default function useLaserCutRequest() {
 
     const putLaserCutRequestTimeLeft = async ({id, newTimeLeft}:
       {id: number, newTimeLeft: Date}) => {
-      const res = await fetch("/api/reserveforLaser", {
+        console.log("time changed")
+        const res = await fetch("/api/reserveforLaser", {
         method: "PUT",
         body: JSON.stringify({
           id,
