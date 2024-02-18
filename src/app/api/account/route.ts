@@ -35,73 +35,61 @@ export async function POST(req: NextRequest) {
     
     const data = await req.json();
     console.log({data})
-    const { username, password, permission } = data;
+    const { username, password, permission, login } = data;
     // const hashedPassword = await bcrypt.hash(password, 165165);
-    console.log(username, password, permission);
-    try {
-        const existed = await prisma.account.findUnique({
-            where: {
-                name: username,
-            }
-        });
-        if(!existed) {
-            const user = await prisma.account.create({
-                data: {
+    if (!login) {
+        try {
+            const existed = await prisma.account.findUnique({
+                where: {
                     name: username,
-                    password: password,
-                    permission: permission,
                 }
             });
-            const token = jwt.sign({username: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
-            return NextResponse.json({ message: "OK", user: user, token: token }, {status: 200})
-        } else {
+            if(!existed) {
+                const user = await prisma.account.create({
+                    data: {
+                        name: username,
+                        password: password,
+                        permission: permission,
+                    }
+                });
+                const token = jwt.sign({username: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
+                return NextResponse.json({ message: "OK", user: user, token: token }, {status: 200})
+            } else {
+                return NextResponse.json(
+                    { error: "Account already existed" },
+                    { status: 400 },
+                );
+            }
+            // const token = jwt.sign({usetId: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
+            // return NextResponse.json(token);
+        } catch (error) {
+            console.log("error: ", error);
             return NextResponse.json(
-                { error: "Account already existed" },
-                { status: 400 },
-              );
+                { error: "Something went wrong" },
+                { status: 500 },
+            );
         }
-        // const token = jwt.sign({usetId: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
-        // return NextResponse.json(token);
-    } catch (error) {
-        console.log("error: ", error);
-        return NextResponse.json(
-            { error: "Something went wrong" },
-            { status: 500 },
-          );
-    }
-}
-
-export async function GET(req: NextRequest) {
-const data = await req.json();
-const { name, password } = data;
-try {
-    const user = await prisma.account.findUnique({
-        where: {
-            name: name,
+    } else if (login) {
+        try {
+            const isPasswordValid = password === user.password ? true : false;
+            if(isPasswordValid) {
+                const token = jwt.sign({name: user.name, permission: user.permission}, env.PASSWORD_SECRET, {expiresIn: env.JWT_EXPIRES_IN});
+                return NextResponse.json({user: user, token: token}, { status: 200 });
+            } else {
+                return NextResponse.json(
+                    { error: "Incorrect Password" },
+                    { status: 400 },
+                );
+            }
+        } catch (error) {
+            return NextResponse.json(
+                { error: "Log in failed due to incorrect information" },
+                { status: 500 }
+            );
         }
-    });
-    if(!user) {
-        return NextResponse.json(
-            { error: "The name does not exist" },
-            { status: 404 },
-          );
     } else {
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if(isPasswordValid) {
-            const token = jwt.sign({name: user.name, permission: user.permission}, env.PASSWORD_SECRET, {expiresIn: env.JWT_EXPIRES_IN});
-            return NextResponse.json({user: user, token: token}, { status: 200 });
-        } else {
-            return NextResponse.json(
-                { error: "Incorrect Password" },
-                { status: 400 },
-              );
-        }
-    }
-} catch (error) {
-    return NextResponse.json(
-        { error: "Log in failed due to incorrect information" },
-        { status: 500 }
-      );
+        console.log("idek how this could happen")
+        return;
     }
 }
 
