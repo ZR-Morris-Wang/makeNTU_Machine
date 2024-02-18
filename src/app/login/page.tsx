@@ -26,6 +26,16 @@ export default function Login() {
     //     }
     // }, [permission])
 
+    useEffect(() => {
+        if (username.startsWith("admin")) {
+            setPermission("admin");
+        } else if (username.startsWith("team")) {
+            setPermission("contestant");
+        } else {
+            setPermission("");
+        }
+    }, [username]);
+
     const handleRegister = async () => {
         const validInput = checkInput();
         if (!validInput){
@@ -71,21 +81,13 @@ export default function Login() {
                 return false;
             }
         }
-        if (username.startsWith("admin")) {
-            console.log("state1")
-            setPermission("admin");
-        } else if (username.startsWith("team")) {
-            console.log("state2")
-            setPermission("contestant");
-            router.refresh()
-            console.log(permission)
-        } else {
-            console.log("state3")
+        if (!username.startsWith("admin") || !username.startsWith("team")) {
             alert("帳號格式錯誤");
             return false;
+        } else {
+            console.log("checkInput: ", username, password, comfirmPassword, permission)
+            return true;
         }
-        console.log("checkInput: ", username, password, comfirmPassword, permission)
-        return true;
     }
     const direct = () => {
         if (permission === 'contestant')  {
