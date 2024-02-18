@@ -19,20 +19,22 @@ export default function Login() {
     const [isSignUp, setIsSignUp] = useState(false);
     const { createAccount, getAccount } = useAccount();
 
-    useEffect(() => {
-        console.log("useEffect: ", username, password, permission)
-        if (permission !== "") {
-            direct();
-        }
-    }, [permission])
+    // useEffect(() => {
+    //     console.log("useEffect: ", username, password, permission)
+    //     if (permission !== "") {
+    //         direct();
+    //     }
+    // }, [permission])
 
     const handleRegister = async () => {
-        if (!checkInput()) {
+        const validInput = checkInput();
+        if (!validInput){
             return;
-        }
+        } 
+        console.log(username,password,permission)
         try {
             const { user: user, token: token } = await createAccount({ username, password, permission });
-            localStorage.setItem("jwt-token: ", token);
+            // localStorage.setItem("jwt-token: ", token);
              //幫我跳到登入頁面
         } catch(error) {
             alert("發生錯誤");
@@ -56,7 +58,7 @@ export default function Login() {
         }
     }
 
-    const checkInput = async () => {
+    const checkInput = () => {
         if (!isSignUp && (username === "" || password === "")) {
             alert("帳號或密碼不得為空");
             return false;
@@ -70,10 +72,15 @@ export default function Login() {
             }
         }
         if (username.startsWith("admin")) {
+            console.log("state1")
             setPermission("admin");
         } else if (username.startsWith("team")) {
+            console.log("state2")
             setPermission("contestant");
+            router.refresh()
+            console.log(permission)
         } else {
+            console.log("state3")
             alert("帳號格式錯誤");
             return false;
         }
@@ -138,11 +145,11 @@ export default function Login() {
                 >取消</button>
                 {!isSignUp && <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-                    onClick={handleLogin}
+                    onClick={()=>handleLogin()}
                 >登入</button>}
                 {isSignUp && <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={handleRegister}
+                    onClick={()=>handleRegister()}
                 >註冊</button>}
             </div>
         </div>
