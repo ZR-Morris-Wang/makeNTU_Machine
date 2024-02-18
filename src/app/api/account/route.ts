@@ -32,10 +32,12 @@ export async function isAccountUnique(req: NextApiRequest, res: NextApiResponse)
 // }
 
 export async function POST(req: NextRequest) {
+    
     const data = await req.json();
+    console.log({data})
     const { username, password, permission } = data;
-    const hashedPassword = await bcrypt.hash(password, 165165);
-    console.log(data);
+    // const hashedPassword = await bcrypt.hash(password, 165165);
+    console.log(username, password, permission);
     try {
         const existed = await prisma.account.findUnique({
             where: {
@@ -98,11 +100,9 @@ try {
 } catch (error) {
     return NextResponse.json(
         { error: "Log in failed due to incorrect information" },
-        { status: 500 },
+        { status: 500 }
       );
-
-}
-
+    }
 }
 
 // export async function GET(req:NextRequest){

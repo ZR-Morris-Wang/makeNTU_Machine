@@ -8,22 +8,25 @@ export default function useAccount() {
     const createAccount = async ({
       username, password, permission
     }:{username: string, password: string, permission: string}) => {
+      console.log(username,password,permission)
       const res = await fetch("/api/account", {
         method: "POST",
         body: JSON.stringify({
-          name: username,
+          username: username,
           password: password,
-          permission: permission,
+          permission: permission
         }),
       });
 
       if (!res.ok) {
         const body = await res.json();
+        console.log(body.error)
         throw new Error(body.error);
       }
       // router.refresh() is a Next.js function that refreshes the page without
       // reloading the page. This is useful for when we want to update the UI
       // from server components.
+      // console.log(res.json())
       router.refresh();
       return res.json();
     };
