@@ -44,7 +44,7 @@ export default function Login() {
         console.log(username,password,permission)
         try {
             const { user: user, token: token } = await createAccount({ username, password, permission });
-            // localStorage.setItem("jwt-token: ", token);
+            localStorage.setItem("jwt-token: ", token);
              //幫我跳到登入頁面
         } catch(error) {
             alert("發生錯誤");
@@ -81,7 +81,7 @@ export default function Login() {
                 return false;
             }
         }
-        if (!username.startsWith("admin") || !username.startsWith("team")) {
+        if (!username.startsWith("admin") && !username.startsWith("team")) {
             alert("帳號格式錯誤");
             return false;
         } else {
