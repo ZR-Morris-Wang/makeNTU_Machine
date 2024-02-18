@@ -71,15 +71,27 @@ export async function POST(req: NextRequest) {
         }
     } else if (login) {
         try {
-            const isPasswordValid = password === user.password ? true : false;
-            if(isPasswordValid) {
-                const token = jwt.sign({name: user.name, permission: user.permission}, env.PASSWORD_SECRET, {expiresIn: env.JWT_EXPIRES_IN});
-                return NextResponse.json({user: user, token: token}, { status: 200 });
-            } else {
+            const user = await prisma.account.findUnique({
+                where: {
+                    name: username,
+                }
+            });
+            if(!user) {
                 return NextResponse.json(
-                    { error: "Incorrect Password" },
-                    { status: 400 },
-                );
+                     { error: "Account does not exist" },
+                     { status: 400 },
+                 );
+            } else {
+                const isPasswordValid = password === user.password ? true : false;
+                if(isPasswordValid) {
+                    const token = jwt.sign({username: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});                    
+                    return NextResponse.json({ message: "OK", user: user, token: token }, {status: 200})
+                } else {
+                    return NextResponse.json(
+                        { error: "Incorrect Password" },
+                        { status: 400 },
+                    );
+                }
             }
         } catch (error) {
             return NextResponse.json(

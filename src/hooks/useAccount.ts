@@ -36,7 +36,7 @@ export default function useAccount() {
       const res = await fetch("/api/account", {
         method: "POST",
         body: JSON.stringify({
-          name: username,
+          username: username,
           password: password,
           login: true,
         })
