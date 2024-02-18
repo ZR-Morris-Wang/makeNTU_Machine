@@ -6,12 +6,12 @@ export default function useAccount() {
     const router = useRouter();
     
     const createAccount = async ({
-      name, password, permission
-    }:{name: string, password: string, permission: string}) => {
+      username, password, permission
+    }:{username: string, password: string, permission: string}) => {
       const res = await fetch("/api/account", {
         method: "POST",
         body: JSON.stringify({
-          name: name,
+          name: username,
           password: password,
           permission: permission,
         }),
@@ -25,21 +25,23 @@ export default function useAccount() {
       // reloading the page. This is useful for when we want to update the UI
       // from server components.
       router.refresh();
+      return res.json();
     };
 
-    const getAccount = async (groupName: string) =>{
-      // const res = await fetch("/api/account", {
-      //   method: "GET",
-      //   body: JSON.stringify({
-      //     groupName: groupName,
-      //   })
-      // });
-      // if (!res.ok) {
-      //   const body = await res.json();
-      //   throw new Error(body.error);
-      // }
-      // router.refresh();
-      // return res.json();
+    const getAccount = async ({ username, password} : { username: string, password: string }) =>{
+      const res = await fetch("/api/account", {
+        method: "GET",
+        body: JSON.stringify({
+          name: username,
+          password: password,
+        })
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+      return res.json();
       
     }
     
