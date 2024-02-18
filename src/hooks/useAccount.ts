@@ -14,7 +14,8 @@ export default function useAccount() {
         body: JSON.stringify({
           username: username,
           password: password,
-          permission: permission
+          permission: permission,
+          login: false,
         }),
       });
 
@@ -33,10 +34,11 @@ export default function useAccount() {
 
     const getAccount = async ({ username, password} : { username: string, password: string }) =>{
       const res = await fetch("/api/account", {
-        method: "GET",
+        method: "POST",
         body: JSON.stringify({
           name: username,
           password: password,
+          login: true,
         })
       });
       if (!res.ok) {
