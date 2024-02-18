@@ -7,7 +7,6 @@ import { AccountContext } from "@/context/Account";
 import { RequestContext } from "@/context/Request";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
-import { Mate_SC } from "next/font/google";
 
 export default function reserve() {
     const { user } = useContext(AccountContext);

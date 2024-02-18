@@ -22,7 +22,7 @@ export default function( {id, isAdmin, initialState, timeStarted}: StatusProps )
     const [ requestList, setRequestList ] = useState<indRequestForStatus[]>();
     
     const [ current, setCurrent ] = useState(0);//now status
-    const [ timeCreated, setTimeCreated] = useState<Date>()//the latest time switched to "到"
+    const [ timeCreated, setTimeCreated] = useState<Date>(new Date())//the latest time switched to "到"
     const [ countdown, setCountdown ] = useState(false);//whether counting down or not
     const [ timeLeft, setTimeLeft ] = useState(0);//left time
     const [ wrong, setWrong ] = useState(false);//pass number or not
@@ -64,18 +64,13 @@ export default function( {id, isAdmin, initialState, timeStarted}: StatusProps )
     },[])
     
     useEffect(() => {
-        // setTimeLeft(50)
-        // console.log("cd")
         if(countdown === true){
-            // console.log(new Date())
-            // console.log(new Date(timeStarted))
             gReq()
             const countDownByState = () => {
                 setTimeLeft(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000));
-                console.log(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000))
+                console.log(Math.trunc(new Date().getTime())/1000)
             }
             setTimer(setInterval(countDownByState, 1000));
-
         }
         else{
             clearInterval(timer);
@@ -84,7 +79,7 @@ export default function( {id, isAdmin, initialState, timeStarted}: StatusProps )
 
     useEffect(()=>{
         // console.log("tlchanged")
-        if(timeLeft < 0){
+        if(timeLeft <= 0){
             clearInterval(timer);
             setCountdown(false);
             setWrong(true);
