@@ -3,7 +3,9 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import InputArea from "@/components/ui/InputArea";
-import { SignInApi, SignUpApi, isAccountUnique } from "../api/account/route";
+// import { SignInApi, SignUpApi, isAccountUnique } from "../api/account/route";
+import useAccount from "@/hooks/useAccount";
+
 
 export default function Login() {
     const usernameRef = useRef<HTMLInputElement>(null);
@@ -15,6 +17,7 @@ export default function Login() {
     const [comfirmPassword, setComfirmPassword] = useState("");
     const [permission, setPermission] = useState("");
     const [isSignUp, setIsSignUp] = useState(false);
+    const { createAccount, getAccount } = useAccount();
 
     useEffect(() => {
         console.log("useEffect: ", username, password, permission)
@@ -28,8 +31,9 @@ export default function Login() {
             return;
         }
         try {
-            const { token: token } = await signUpApi({ account, password, permission });
+            const { user: user, token: token } = await createAccount({ username, password, permission });
             localStorage.setItem("jwt-token: ", token);
+             //幫我跳到登入頁面
         } catch(error) {
             alert("發生錯誤");
             console.log(error);
@@ -43,7 +47,7 @@ export default function Login() {
             return;
         }
         try {
-            const { token: token } = await signInApi({ account, password });
+            const { user: user, token: token } = await getAccount({ username, password });
             localStorage.setItem("jwt-token: ", token);
         } catch(error) {
             alert("發生錯誤");
