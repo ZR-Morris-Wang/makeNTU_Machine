@@ -122,7 +122,7 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
                             <TableCell>預約組別</TableCell>
                             <TableCell>檔案名稱</TableCell>
                             <TableCell>最終板材</TableCell>
-                            <TableCell>列印狀態</TableCell>
+                            <TableCell>狀態</TableCell>
                             <TableCell>備註</TableCell>
                         </TableRow>
                         {
@@ -164,7 +164,7 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
                 </Table>
             </TableContainer>
             <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
-            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)}/>
+            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)} type="laser"/>
         </>
     )
 }

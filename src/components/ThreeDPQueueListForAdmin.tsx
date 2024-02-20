@@ -151,11 +151,11 @@ export default function ThreeDPQueueListForAdmin() {
                                 </FormControl>
                             </TableCell>
 
-                            <TableCell>{request.loadBearing}</TableCell>
+                            <TableCell>{request.loadBearing? "是" : "否"}</TableCell>
                             <TableCell>{request.material}</TableCell>
 
                             <TableCell>
-                                <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="tdp"></Status>
+                                <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="3dp"></Status>
                             </TableCell>
 
                             <TableCell>

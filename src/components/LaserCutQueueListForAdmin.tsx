@@ -146,7 +146,6 @@ export default function LaserCutQueueListForAdmin() {
                                             label="機台編號"
                                             onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
                                             <MenuItem value={0}>未安排</MenuItem>
-                                            <MenuItem value={3}>已完成</MenuItem>
                                             <MenuItem value={1}>{Number(1)}</MenuItem>
                                             <MenuItem value={2}>{Number(2)}</MenuItem>
                                         </Select>
@@ -154,7 +153,7 @@ export default function LaserCutQueueListForAdmin() {
                             </TableCell>
 
                             <TableCell sx={{whiteSpace:"pre"}}>{request.material.map(
-                                (mat)=>(<p className={request.material.indexOf(mat)===0?"text-red-400":""}>{(request.material.indexOf(mat)+1)+'. '+mat}</p>))}</TableCell>
+                                (mat)=>(<p className={request.material.indexOf(mat)===0?"text-red-400":""} id={mat}>{(request.material.indexOf(mat)+1)+'. '+mat}</p>))}</TableCell>
                             
                             <TableCell>
                                 <FormControl fullWidth>
@@ -172,7 +171,7 @@ export default function LaserCutQueueListForAdmin() {
                             </TableCell>
 
                             <TableCell>
-                                <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="Laser"></Status>
+                                <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status>
                             </TableCell>
 
                             <TableCell>

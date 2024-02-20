@@ -2,7 +2,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import RequestCardForMachine from "./RequestCardForMachine"
 import { RequestContext } from "@/context/Request";
-import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import useThreeDPRequest from "@/hooks/useThreeDPRequest";
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -21,18 +21,17 @@ export type indRequestForMachine = {
     id: number
     groupname: number
     machine: number
+    loadBearing: boolean
     filename: string
-    finalMaterial: string
     status: string
     comment: string
 }
 
-export default function MachineList({ index }: MachineListProps) {
+export default function ThreeDPMachineList({ index }: MachineListProps) {
     const { requests } = useContext(RequestContext);
     const Button = require('@mui/material/Button').default
     const router = useRouter();
-    const { getLaserCutRequest, putLaserCutRequestMachine,
-        putLaserCutRequestMaterial, putLaserCutRequestStatus } = useLaserCutRequest(); 
+    const { getThreeDPRequest, putThreeDPRequestStatus } = useThreeDPRequest(); 
     
     const [ requestList, setRequestList ] = useState<indRequestForMachine[]>();
     
@@ -46,7 +45,7 @@ export default function MachineList({ index }: MachineListProps) {
     useEffect(() => {
         const gReq = async () => {
             try{
-                const requestListInit = await getLaserCutRequest();
+                const requestListInit = await getThreeDPRequest();
                 const requestListJson:indRequestForMachine[] = requestListInit["dbresultReq"];
                 setRequestList(requestListJson);
             }
@@ -59,7 +58,7 @@ export default function MachineList({ index }: MachineListProps) {
 
     const handleStatusChange =  async(id: number, newStatus: string) => {
         try{
-            await putLaserCutRequestStatus({
+            await putThreeDPRequestStatus({
                 id,
                 newStatus
             })
@@ -121,8 +120,8 @@ export default function MachineList({ index }: MachineListProps) {
                         <TableRow key="head">
                             <TableCell>預約組別</TableCell>
                             <TableCell>檔案名稱</TableCell>
-                            <TableCell>最終板材</TableCell>
-                            <TableCell>列印狀態</TableCell>
+                            <TableCell>承重與否</TableCell>
+                            <TableCell>狀態</TableCell>
                             <TableCell>備註</TableCell>
                         </TableRow>
                         {
@@ -139,7 +138,7 @@ export default function MachineList({ index }: MachineListProps) {
                             <TableRow key={request.id}>
                                 <TableCell>{String(request.groupname)}</TableCell>
                                 <TableCell>{request.filename}</TableCell>
-                                <TableCell>{request.finalMaterial}</TableCell>
+                                <TableCell>{request.loadBearing? "是" : "否" }</TableCell>
                                 <TableCell>
                                     {request.status}
                                     <Button onClick={()=>{
@@ -164,7 +163,7 @@ export default function MachineList({ index }: MachineListProps) {
                 </Table>
             </TableContainer>
             <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
-            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)}/>
+            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)} type="3dp"/>
         </>
     )
 }

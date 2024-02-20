@@ -47,12 +47,8 @@ export default function reserve() {
     }
     
     const handleSubmit = async () => {
-        if(type === "") {
-            setUnselected(true);
-            return;
-        } else {
-            setUnselected(false);
-        } if(!filename) {
+        
+        if(!filename) {
             setFalseTitle(true);
             return;
         } else {
@@ -105,7 +101,7 @@ export default function reserve() {
             
             <div className="flex items-end w-2/6 h-5" />
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
-                <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
+                {/* <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
                 <select 
                     className="p-1 h-8 border-black border-2 text-gray-800 rounded-lg bg-white focus:outline-none"
                     value={type}
@@ -114,12 +110,12 @@ export default function reserve() {
                     <option value="">--Select--</option>
                     <option value="3DP">3D列印機</option>
                     <option value="LCM">雷射切割機</option>
-                </select>
+                </select> */}
             </div>
             
-            <div className="flex items-end w-2/6 h-5">
+            {/* <div className="flex items-end w-2/6 h-5">
                 {unselected && <p className="ml-20 w-3/4  pl-5 text-sm text-red-500 ">請選擇借用機台類型</p>}
-            </div>
+            </div> */}
 
             <Checkbox onClick={ ()=>{switchCase()} }/>自行攜帶板材雷切(需在備註寫下材質與速度、功率等參數)
             <div style = {{display : customized?"none":"block"}}>

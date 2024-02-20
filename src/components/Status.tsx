@@ -60,14 +60,10 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
         if (statusArray.includes(initialState)){
             setCurrent(statusArray.indexOf(initialState))
         }
-        if(initialState === "到"){
+        if (initialState === "到"){
             setCountdown(true)
             setTimeLeft(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000))
         }
-        gReq();
-        // if(initialState === "完"){
-        //     setWrong(true)
-        // }
     },[])
     
     useEffect(() => {
@@ -148,8 +144,8 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
             <>
                 <div className="inline-flex flex-row">
                     {statusArray.map(
-                    (status)=>(statusArray.indexOf(status) === current ? 
-                    <div className="w-min text-red-400">{status}</div> : <div className="w-min">{status}</div>)
+                        (status)=>(statusArray.indexOf(status) === current ? 
+                        <div className="w-min text-red-400">{status}</div> : <div className="w-min">{status}</div>)
                     )}
                 </div>
                 <br/>
