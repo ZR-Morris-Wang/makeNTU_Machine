@@ -1,9 +1,7 @@
 'use client'
-import React, { SetStateAction, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
-// import RequestCard from "./RequestCard";
-// import prisma from "../../prisma/client";
 import Status from "./Status";
 import useRequest from "@/hooks/useLaserCutRequest";
 import { usePathname } from "next/navigation";
@@ -24,8 +22,9 @@ type indRequest = {
     finalMaterial: string
     status: string
     comment: string
+    timeleft: Date
 }
-export default function QueueList() {      
+export default function LaserCutQueueList() {      
     const { requests, setRequests } = useContext(RequestContext);
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequest[]>();
@@ -136,7 +135,8 @@ export default function QueueList() {
                     <TableRow key="head">
                         <TableCell>預約組別</TableCell>
                         <TableCell>檔案名稱</TableCell>
-                        <TableCell>使用板材</TableCell>
+                        <TableCell>板材志願序</TableCell>
+                        <TableCell>最終板材</TableCell>
                         <TableCell>列印狀態</TableCell>
                         <TableCell>備註</TableCell>
                     </TableRow>
@@ -154,7 +154,8 @@ export default function QueueList() {
                             <TableCell>{String(request.groupname)}</TableCell>
                             <TableCell>{request.filename}</TableCell>
                             <TableCell>{request.material}</TableCell>
-                            <TableCell><Status id={request.id} isAdmin={false} initialState={request.status}></Status></TableCell>
+                            <TableCell>{request.finalMaterial}</TableCell>
+                            <TableCell><Status id={request.id} isAdmin={false} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status></TableCell>
                             <TableCell>{request.comment}</TableCell>
                         </TableRow>
                             )

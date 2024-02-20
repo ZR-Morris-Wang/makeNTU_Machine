@@ -1,8 +1,9 @@
 'use client'
 import React from "react";
 import { useRouter } from "next/navigation";
-import QueueListForAdmin from "@/components/QueueListForAdmin";
-import MachineList from "@/components/MachineList";
+import LaserCutQueueListForAdmin from "@/components/LaserCutQueueListForAdmin";
+import ThreeDPQueueListForAdmin from "@/components/ThreeDPQueueListForAdmin";
+import MachineList from "@/components/LaserCutMachineList";
 import Map from "@/components/Map";
 
 export default function admin() {
@@ -15,7 +16,8 @@ export default function admin() {
         <>
         <Map />
         <div className="m-2 h-[90vh] flex items-top justify-start">
-            <QueueListForAdmin />
+            <LaserCutQueueListForAdmin/>
+            <ThreeDPQueueListForAdmin/>
             <div className="h-9/10 w-1/2 m-2 flex flex-col items-center justify-top">
                 <div className="w-full h-1/2 flex flex-col items-center justify-top">
                     <MachineList index={1}/>

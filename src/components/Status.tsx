@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import useThreeDPRequest from "@/hooks/useThreeDPRequest";
 type StatusProps = {
     id:number;
     isAdmin:boolean;
     initialState:string;
     timeStarted: Date;
+    type:string;
 }
 
 type indRequestForStatus = {
@@ -14,11 +16,12 @@ type indRequestForStatus = {
     status: string
 }
 
-export default function( {id, isAdmin, initialState, timeStarted}: StatusProps ){
+export default function( {id, isAdmin, initialState, timeStarted, type}: StatusProps ){
     const router = useRouter();
     const [ timer, setTimer ] = useState<NodeJS.Timeout>();
     const statusArray = ['等','到','切','完'];
     const { getLaserCutRequest, putLaserCutRequestStatus, putLaserCutRequestTimeLeft } = useLaserCutRequest();
+    const { getThreeDPRequest, putThreeDPRequestStatus, putThreeDPRequestTimeLeft } = useThreeDPRequest();
     const [ requestList, setRequestList ] = useState<indRequestForStatus[]>();
     
     const [ current, setCurrent ] = useState(0);//now status
@@ -33,12 +36,16 @@ export default function( {id, isAdmin, initialState, timeStarted}: StatusProps )
 
     const gReq = async () => {
         try{
-            const requestListInit = await getLaserCutRequest();
-            const requestListJson:indRequestForStatus[] = requestListInit["dbresultReq"];
+            const requestListLaserInit = await getLaserCutRequest();
+            const requestListLaserJson:indRequestForStatus[] = requestListLaserInit["dbresultReq"];
+            const requestListTDPInit = await getThreeDPRequest();
+            const requestListTDPJson:indRequestForStatus[] = requestListTDPInit["dbresultReq"];
+            const requestListJson = requestListLaserJson.concat(requestListTDPJson)
+            // console.log(requestListJson)
             setRequestList(requestListJson);
-            if (typeof(requestListJson.find(checkID)) != undefined) {
+            if (requestListJson.find(checkID) !== undefined) {
                 setTimeCreated(requestListJson.find(checkID)?.timeleft)
-                console.log(requestListJson.find(checkID)?.timeleft)
+                // console.log(requestListJson.find(checkID)?.timeleft)
             }
             else{
                 setTimeCreated(new Date(0))
@@ -88,24 +95,48 @@ export default function( {id, isAdmin, initialState, timeStarted}: StatusProps )
     },[timeLeft])
 
     const handleStatusChange = async(id: number, newStatus: string) => {
-        try{
-            await putLaserCutRequestStatus({
-                id,
-                newStatus
-            })
-        }catch(e){
-            console.error(e);
+        if (type === "laser"){
+            try{
+                await putLaserCutRequestStatus({
+                    id,
+                    newStatus
+                })
+            }catch(e){
+                console.error(e);
+            }
+        }
+        else{
+            try{
+                await putThreeDPRequestStatus({
+                    id,
+                    newStatus
+                })
+            }catch(e){
+                console.error(e);
+            }
         }
         router.refresh();
     }
     const handleTimeChange = async(id: number, newTimeLeft: Date) => {
-        try{
-            await putLaserCutRequestTimeLeft({
-                id,
-                newTimeLeft
-            })
-        }catch(e){
-            console.error(e);
+        if(type === "laser"){
+            try{
+                await putLaserCutRequestTimeLeft({
+                    id,
+                    newTimeLeft
+                })
+            }catch(e){
+                console.error(e);
+            }
+        }
+        else{
+            try{
+                await putThreeDPRequestTimeLeft({
+                    id,
+                    newTimeLeft
+                })
+            }catch(e){
+                console.error(e);
+            }
         }
         router.refresh();
     }

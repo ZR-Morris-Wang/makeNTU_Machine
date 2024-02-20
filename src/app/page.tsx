@@ -1,12 +1,14 @@
 import React from 'react'
 import Map from '../components/Map'
-import QueueList from '../components/QueueList'
+import LaserCutQueueList from '../components/LaserCutQueueList'
+import ThreeDPQueueList from "@/components/ThreeDPQueueList"
 
 export default function Home() {
   return (
     <>
-    <Map />
-    <QueueList />
+      <Map/>
+      <LaserCutQueueList/>
+      <ThreeDPQueueList/>
     </>
   )
 }

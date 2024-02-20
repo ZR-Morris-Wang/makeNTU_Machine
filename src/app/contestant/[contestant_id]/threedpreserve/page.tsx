@@ -1,13 +1,13 @@
 "use client"
 import React, { useState, useRef, useContext } from "react";
 import InputArea from "@/components/ui/InputArea";
-import { Checkbox } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 import { AccountContext } from "@/context/Account";
 import { RequestContext } from "@/context/Request";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
-
+import { Checkbox } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import useThreeDPRequest from "@/hooks/useThreeDPRequest";
 export default function reserve() {
     const { user } = useContext(AccountContext);
     const { sendRequest } = useContext(RequestContext);
@@ -22,10 +22,9 @@ export default function reserve() {
     const [tooLong, setTooLong] = useState(false);
     const [NoteTooLong, setNoteTooLong] = useState(false);
     const [unselected, setUnselected] = useState(false);
-    const [material, setMaterial] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
-    const [materialBackUp, setMaterialBackUp] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
-    const [customized, setCustomized] = useState(false);
-    const { postLaserCutRequest } = useLaserCutRequest();
+    const [material, setMaterial] = useState([""]);
+    const [loadBearing, setLoadBearing] = useState(false);
+    const { postThreeDPRequest } = useThreeDPRequest();
     const group = "team1";
     // if(user?.permission!=='admin' && user?.permission!=='contestant'){
     //     if(!tooLong) {
@@ -34,17 +33,6 @@ export default function reserve() {
     //     }
     //     router.push('/');
     // }
-    const customizedMaterial = ["自訂"]
-    const switchCase = function(){
-        if (customized===false){
-            setCustomized(true);
-            setMaterial(["自訂"]);
-        }
-        else{
-            setCustomized(false);
-            setMaterial(materialBackUp);
-        }
-    }
     
     const handleSubmit = async () => {
         if(type === "") {
@@ -68,10 +56,6 @@ export default function reserve() {
         }
         const pathTemp = pathname.split("/");
         const group = pathTemp[2];
-        // const group = "team1";
-        const request = { group, type, filename, comment };
-        console.log(request);
-        
         // try {
         //     sendRequest(request);
         // } catch (error) {
@@ -81,9 +65,10 @@ export default function reserve() {
         // }
         
         try{
-            await postLaserCutRequest({
+            await postThreeDPRequest({
                 group,
                 filename,
+                loadBearing,
                 material,
                 comment,
             })
@@ -125,40 +110,7 @@ export default function reserve() {
                 {unselected && <p className="ml-20 w-3/4  pl-5 text-sm text-red-500 ">請選擇借用機台類型</p>}
             </div>
 
-            <Checkbox onClick={ ()=>{switchCase()} }/>自行攜帶板材雷切(需在備註寫下材質與速度、功率等參數)
-            <div style = {{display : customized?"none":"block"}}>
-            <DragDropContext 
-                onDragEnd ={ (event) => {
-                    const { source, destination } = event;
-                    if (!destination) {
-                      return;
-                    }
-                    let newMaterial = [...material];
-                    const [remove] = newMaterial.splice(source.index, 1);
-                    newMaterial.splice(destination.index, 0, remove);
-                    setMaterial(newMaterial);
-                    setMaterialBackUp(newMaterial);
-                  }}
-                
-                >
-                <Droppable droppableId="drop-id">
-                    {(provided, snapshot) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {material.map((item, index) => (
-                            <Draggable key={item} draggableId={item} index={index} >
-                                {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    {item}
-                                </div>
-                                )}
-                            </Draggable>
-                            )
-                        )}
-                    </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
-            </div>
+            
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">檔案名稱：</p>
                 <InputArea
@@ -174,6 +126,19 @@ export default function reserve() {
                 {falseTitle && <p className="ml-20 w-3/4 pl-5 text-sm text-red-500">請輸入檔案名稱</p>}
                 {tooLong && <p className="ml-20 w-3/4 pl-5 text-sm text-red-500">檔案名稱不可超過15字</p>}
             </div>
+            <Checkbox onClick = {()=>setLoadBearing((prev) => (!prev))}></Checkbox>需要支撐
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">使用材料</InputLabel>
+                    <Select
+                        // labelId="demo-simple-select-label"
+                        // id="demo-simple-select"
+                        defaultValue=""
+                        label="使用材料"
+                        onChange={(e)=>{setMaterial([(e.target.value)]);}}>
+                        <MenuItem value={"PLA"}>PLA</MenuItem>
+                        <MenuItem value={"others"}>others</MenuItem>
+                    </Select>
+            </FormControl>
 
             <div className="m-3 mb-0.5 w-2/6 flex gap-2">
                 <p className="font-bold w-1/4 text-right">備註：</p>

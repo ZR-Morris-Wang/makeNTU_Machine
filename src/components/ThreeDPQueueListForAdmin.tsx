@@ -5,7 +5,7 @@ import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
 import RequestCardForAdmin from "./RequestCardForAdmin";
 import CommentDialog from "./CommentDialog";
-import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import useThreeDPRequest from "@/hooks/useThreeDPRequest";
 import Status from "@/components/Status"
 
 import TableContainer from '@mui/material/TableContainer';
@@ -22,20 +22,19 @@ type indRequestForAdmin = {
     id: number
     groupname: number
     machine: number
+    loadBearing: boolean
     filename: string
     material: string[]
-    finalMaterial: string
     status: string
     comment: string
     timeleft: Date
 }
 
-export default function QueueListForAdmin() {
+export default function ThreeDPQueueListForAdmin() {
     const { requests } = useContext(RequestContext);
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequestForAdmin[]>();
-    const { getLaserCutRequest, putLaserCutRequestMachine,
-    putLaserCutRequestMaterial, putLaserCutRequestStatus } = useLaserCutRequest(); 
+    const { getThreeDPRequest, putThreeDPRequestMachine, putThreeDPRequestStatus } = useThreeDPRequest(); 
     const testRequest = {
         filename: "test1",
         type: "3DP",
@@ -49,8 +48,7 @@ export default function QueueListForAdmin() {
     useEffect(() => {
         const gReq = async () => {
             try{
-                //alert("rerender!")
-                const requestListInit = await getLaserCutRequest();
+                const requestListInit = await getThreeDPRequest();
                 const requestListJson:indRequestForAdmin[] = requestListInit["dbresultReq"];
                 setRequestList(requestListJson);
             }
@@ -61,25 +59,23 @@ export default function QueueListForAdmin() {
         gReq();
     },[]);
     
-    const handleMaterialChange = async (id: number, newFinalMaterial: string) => {
+    const handleMachineChange = async (id: number, newMachine: number) => {
         try{
-            await putLaserCutRequestMaterial({
+            await putThreeDPRequestMachine({
                 id,
-                newFinalMaterial
+                newMachine
             })
-            // console.log("successful test3")
         }catch(e){
             console.error(e);
         }
     }
 
-    const handleMachineChange = async(id: number, newMachine: number) => {
+    const handleStatusChange = async(id: number, newStatus: string) => {
         try{
-            await putLaserCutRequestMachine({
+            await putThreeDPRequestStatus({
                 id,
-                newMachine
+                newStatus
             })
-            // console.log("successful test3")
         }catch(e){
             console.error(e);
         }
@@ -118,8 +114,8 @@ export default function QueueListForAdmin() {
                         <TableCell>預約組別</TableCell>
                         <TableCell>檔案名稱</TableCell>
                         <TableCell>使用機台</TableCell>
-                        <TableCell>板材志願序</TableCell>
-                        <TableCell>最終板材</TableCell>
+                        <TableCell>承重與否</TableCell>
+                        <TableCell>使用材料</TableCell>
                         <TableCell>列印狀態</TableCell>
                         <TableCell>備註</TableCell>
                     </TableRow>
@@ -147,32 +143,21 @@ export default function QueueListForAdmin() {
                                             label="機台編號"
                                             onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
                                             <MenuItem value={0}>未安排</MenuItem>
-                                            <MenuItem value={3}>已完成</MenuItem>
                                             <MenuItem value={1}>{Number(1)}</MenuItem>
                                             <MenuItem value={2}>{Number(2)}</MenuItem>
+                                            <MenuItem value={3}>{Number(3)}</MenuItem>
+                                            <MenuItem value={4}>{Number(4)}</MenuItem>
                                         </Select>
                                 </FormControl>
                             </TableCell>
 
-                            <TableCell sx={{whiteSpace:"pre"}}>{request.material.map(
-                                (mat)=>(<p className={request.material.indexOf(mat)===0?"text-red-400":""}>{(request.material.indexOf(mat)+1)+'. '+mat}</p>))}</TableCell>
-                            
+                            <TableCell>{request.loadBearing}</TableCell>
+                            <TableCell>{request.material}</TableCell>
+
                             <TableCell>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">板材種類</InputLabel>
-                                        <Select
-                                            // labelId="demo-simple-select-label"
-                                            // id="demo-simple-select"
-                                            defaultValue={request.finalMaterial}
-                                            label="板材種類"
-                                            onChange={(e)=>{handleMaterialChange(request.id,e.target.value as string);}}
-                                            >   
-                                            {request.material.map((eachMaterial)=>(<MenuItem value={eachMaterial}>{eachMaterial}</MenuItem>))}
-                                        </Select>
-                                </FormControl>
+                                <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="tdp"></Status>
                             </TableCell>
 
-                            <TableCell><Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft}></Status></TableCell>
                             <TableCell>
                                 <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
                             </TableCell>
