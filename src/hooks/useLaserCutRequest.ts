@@ -27,9 +27,7 @@ export default function useLaserCutRequest() {
         });
         if (!res.ok) {
           const body = await res.json();
-          console.log("notok")
           throw new Error(body.error);
-          
         }
         // router.refresh() is a Next.js function that refreshes the page without
         // reloading the page. This is useful for when we want to update the UI

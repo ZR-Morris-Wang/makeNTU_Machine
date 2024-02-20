@@ -1,5 +1,3 @@
-//import prisma from ".prisma/client";  
-import { machine } from "os";
 import prisma from "../../../../prisma/client";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -59,7 +57,6 @@ export async function GET (req: NextRequest) {
 export async function PUT (req: NextRequest) {
   const data = await req.json();
   const {newStatus, newMachine, newFinalMaterial, newTimeLeft} = data;
-  // console.log(newStatus);
   const reqID = data.id;
   try{
     const result = await prisma.laserCutReq.update({

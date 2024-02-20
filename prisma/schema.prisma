@@ -40,7 +40,7 @@ model ThreeDPReq {
   machine     Int         // e.g. 0, 1
   filename    String
   loadBearing Boolean     
-  material    Int[]       // e.g. 0: PLA, 1: Other
+  material    String[]       // e.g. 0: PLA, 1: Other
   comment     String?
   status      String    
   timeleft    DateTime  

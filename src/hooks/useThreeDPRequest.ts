@@ -6,31 +6,25 @@ export default function useThreeDPRequest() {
     //POST
     const postThreeDPRequest = async ({
         group,
-        machine,
         filename,
         loadBearing,
         material,
         comment,
-        status
       }: {
         group:string
-        machine:number
         filename:string
         loadBearing: boolean,
-        material:number[]
+        material:string[]
         comment?:string
-        status?:string
       }) => {
         const res = await fetch("/api/reserveforThreeDP", {
           method: "POST",
           body: JSON.stringify({
             group,
-            machine,
             filename,
             loadBearing,
             material,
             comment,
-            status
           }),
         });
         if (!res.ok) {
@@ -57,7 +51,8 @@ export default function useThreeDPRequest() {
     }
     
     //PUT
-    const putThreeDPRequest = async ({id, newStatus}:{id: number, newStatus: string}) => {
+    const putThreeDPRequestStatus = async ({id, newStatus}:
+      {id: number, newStatus: string}) => {
       const res = await fetch("/api/reserveforThreeDP", {
         method: "PUT",
         body: JSON.stringify({
@@ -72,9 +67,44 @@ export default function useThreeDPRequest() {
       router.refresh();
     }
 
+    const putThreeDPRequestMachine = async ({id, newMachine}:
+      {id: number, newMachine: number}) => {
+      console.log(newMachine)
+        const res = await fetch("/api/reserveforThreeDP", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          newMachine,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+    }
+
+    const putThreeDPRequestTimeLeft = async ({id, newTimeLeft}:
+      {id: number, newTimeLeft: Date}) => {
+        const res = await fetch("/api/reserveforThreeDP", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          newTimeLeft,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(body.error);
+      }
+      router.refresh();
+    }
+
     return {
       postThreeDPRequest,
       getThreeDPRequest,
-      putThreeDPRequest,
+      putThreeDPRequestStatus,
+      putThreeDPRequestMachine,
+      putThreeDPRequestTimeLeft
     };
 }

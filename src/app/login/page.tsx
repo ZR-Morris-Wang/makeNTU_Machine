@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import InputArea from "@/components/ui/InputArea";
-// import { SignInApi, SignUpApi, isAccountUnique } from "../api/account/route";
 import useAccount from "@/hooks/useAccount";
 
 
