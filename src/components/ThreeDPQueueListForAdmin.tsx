@@ -105,69 +105,85 @@ export default function ThreeDPQueueListForAdmin() {
             })} 
         </div> */}
 
-        <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-                <TableHead>
-                </TableHead>
-                <TableBody>
-                    <TableRow key="head">
-                        <TableCell>預約組別</TableCell>
-                        <TableCell>檔案名稱</TableCell>
-                        <TableCell>使用機台</TableCell>
-                        <TableCell>承重與否</TableCell>
-                        <TableCell>使用材料</TableCell>
-                        <TableCell>列印狀態</TableCell>
-                        <TableCell>備註</TableCell>
-                    </TableRow>
-                    {
-                        requestList?.map((request)=>(
-                            // <RequestCard information={{
-                            //     group:String(request.groupname),
-                            //     filename:request.filename,
-                            //     material:request.material,
-                            //     status:request.status,
-                            //     comment:request.comment
-
-                            // }}></RequestCard>
-                        <TableRow key={request.id}>
-                            <TableCell>{String(request.groupname)}</TableCell>
-                            <TableCell>{request.filename}</TableCell>
-                            
-                            <TableCell>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">機台編號</InputLabel>
-                                        <Select
-                                            // labelId="demo-simple-select-label"
-                                            // id="demo-simple-select"
-                                            defaultValue={String(request.machine)}
-                                            label="機台編號"
-                                            onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
-                                            <MenuItem value={0}>未安排</MenuItem>
-                                            <MenuItem value={1}>{Number(1)}</MenuItem>
-                                            <MenuItem value={2}>{Number(2)}</MenuItem>
-                                            <MenuItem value={3}>{Number(3)}</MenuItem>
-                                            <MenuItem value={4}>{Number(4)}</MenuItem>
-                                        </Select>
-                                </FormControl>
-                            </TableCell>
-
-                            <TableCell>{request.loadBearing? "是" : "否"}</TableCell>
-                            <TableCell>{request.material}</TableCell>
-
-                            <TableCell>
-                                <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="3dp"></Status>
-                            </TableCell>
-
-                            <TableCell>
-                                <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
-                            </TableCell>
+        <div className="h-10 m-2 flex items-center justify-center cursor-pointer">
+            <h1 className="text-3xl font-bold text-yellow-400">3DP使用申請</h1>
+        </div>
+        <div className="h-3"></div>
+        <div className="flex w-full justify-center">
+            <TableContainer component={Paper} sx={{width: '80%', maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow key="head" className="bg-yellow-300">
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>預約組別</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>檔案名稱</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>使用機台</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>承重與否</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>使用材料</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>列印狀態</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>備註</TableCell>
                         </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+        <div className="flex w-full justify-center">
+            <TableContainer component={Paper} sx={{width: '80%', maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            requestList?.map((request)=>(
+                                // <RequestCard information={{
+                                //     group:String(request.groupname),
+                                //     filename:request.filename,
+                                //     material:request.material,
+                                //     status:request.status,
+                                //     comment:request.comment
+
+                                // }}></RequestCard>
+                            <TableRow key={request.id}>
+                                <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
+                                
+                                <TableCell>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">機台編號</InputLabel>
+                                            <Select
+                                                // labelId="demo-simple-select-label"
+                                                // id="demo-simple-select"
+                                                defaultValue={String(request.machine)}
+                                                label="機台編號"
+                                                onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
+                                                <MenuItem value={0}>未安排</MenuItem>
+                                                <MenuItem value={1}>{Number(1)}</MenuItem>
+                                                <MenuItem value={2}>{Number(2)}</MenuItem>
+                                                <MenuItem value={3}>{Number(3)}</MenuItem>
+                                                <MenuItem value={4}>{Number(4)}</MenuItem>
+                                            </Select>
+                                    </FormControl>
+                                </TableCell>
+
+                                <TableCell sx={{textAlign: 'center'}}>{request.loadBearing? "是" : "否"}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.material}</TableCell>
+
+                                <TableCell sx={{textAlign: 'center'}}>
+                                    <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="3dp"></Status>
+                                </TableCell>
+
+                                <TableCell sx={{textAlign: 'center'}}>
+                                    <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
+                                </TableCell>
+                            </TableRow>
+                                )
                             )
-                        )
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
         <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
         </>
     )

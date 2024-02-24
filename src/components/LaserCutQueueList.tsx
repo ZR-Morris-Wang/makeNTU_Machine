@@ -126,45 +126,60 @@ export default function LaserCutQueueList() {
             </div>*/}
             {/* </div> 
         </div> */}
-
-        <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-                <TableHead>
-                </TableHead>
-                <TableBody>
-                    <TableRow key="head">
-                        <TableCell>預約組別</TableCell>
-                        <TableCell>檔案名稱</TableCell>
-                        <TableCell>板材志願序</TableCell>
-                        <TableCell>最終板材</TableCell>
-                        <TableCell>列印狀態</TableCell>
-                        <TableCell>備註</TableCell>
-                    </TableRow>
-                    {
-                        requestList?.map((request)=>(
-                            // <RequestCard information={{
-                            //     group:String(request.groupname),
-                            //     filename:request.filename,
-                            //     material:request.material,
-                            //     status:request.status,
-                            //     comment:request.comment
-
-                            // }}></RequestCard>
-                        <TableRow className={String(request.groupname)===group ? "bg-gray-500" : "" } key={request.id}>
-                            <TableCell>{String(request.groupname)}</TableCell>
-                            <TableCell>{request.filename}</TableCell>
-                            <TableCell>{request.material}</TableCell>
-                            <TableCell>{request.finalMaterial}</TableCell>
-                            <TableCell><Status id={request.id} isAdmin={false} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status></TableCell>
-                            <TableCell>{request.comment}</TableCell>
+        <div className="h-10 m-2 flex items-center justify-center cursor-pointer">
+            <h1 className="text-3xl font-bold text-yellow-400">雷切機等候列表</h1>
+        </div>
+        <div className="h-3"></div>
+        <div className="flex w-full justify-center">
+            <TableContainer component={Paper} sx={{width: '80%', maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow key="head" className="bg-yellow-300">
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>預約組別</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>檔案名稱</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>板材志願序</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>最終板材</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>列印狀態</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>備註</TableCell>
                         </TableRow>
-                            )
-                        )
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+        <div className="flex w-full justify-center">
+            <TableContainer component={Paper} sx={{width: '80%', maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            requestList?.map((request)=>(
+                                // <RequestCard information={{
+                                //     group:String(request.groupname),
+                                //     filename:request.filename,
+                                //     material:request.material,
+                                //     status:request.status,
+                                //     comment:request.comment
 
+                                // }}></RequestCard>
+                            <TableRow className={String(request.groupname)===group ? "bg-gray-300" : "" } key={request.id}>
+                                <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.material}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.finalMaterial}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}><Status id={request.id} isAdmin={false} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status></TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.comment}</TableCell>
+                            </TableRow>
+                                )
+                            )
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+        <div className="h-5"></div>
         </>
     )
 }

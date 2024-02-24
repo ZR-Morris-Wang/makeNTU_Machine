@@ -5,6 +5,7 @@ import { AccountContext } from "@/context/Account";
 import Status from "./Status";
 import useRequest from "@/hooks/useThreeDPRequest";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
@@ -24,8 +25,9 @@ type indRequest = {
     comment: string
     timeleft: Date
 }
-export default function ThreeDPQueueList() {      
+export default function ThreeDPQueueListForContestant() {      
     const { requests, setRequests } = useContext(RequestContext);
+    const router = useRouter();
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequest[]>();
     const pathname = usePathname();
@@ -126,8 +128,12 @@ export default function ThreeDPQueueList() {
             </div>*/}
             {/* </div> 
         </div> */}
+
         <div className="h-10 m-2 flex items-center justify-center cursor-pointer">
             <h1 className="text-3xl font-bold text-yellow-400">3DP等候列表</h1>
+            <button 
+                    className="m-4 bg-yellow-500 hover:bg-yellow-300 text-black font-bold py-2 px-4 rounded"
+                    onClick={() => router.push(`${pathname}/threedpreserve`)}>3DP登記</button>
         </div>
         <div className="h-3"></div>
         <div className="flex w-full justify-center">

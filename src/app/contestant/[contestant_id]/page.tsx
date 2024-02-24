@@ -1,8 +1,8 @@
 "use client"
 import React from "react";
 import { useRouter, usePathname } from "next/navigation";
-import LaserCutQueueList from "@/components/LaserCutQueueList";
-import ThreeDPQueueList from "@/components/ThreeDPQueueList"
+import LaserCutQueueListForContestant from "@/components/LaserCutQueueListForContestant";
+import ThreeDPQueueListForContestant from "@/components/ThreeDPQueueListForContestant"
 import Map from "@/components/Map";
 
 export default function contestant() {
@@ -12,20 +12,14 @@ export default function contestant() {
     return (
         <>
         <Map />
-        <LaserCutQueueList/>
-        <ThreeDPQueueList/>
+        <LaserCutQueueListForContestant/>
+        <ThreeDPQueueListForContestant/>
         <div className="h-full m-2 flex flex-col items-center justify-center">
             <div className="flex flex-row justify-between">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
                     onClick={() => router.push("/")}
                 >登出</button>
-                <button 
-                    className="m-1 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => router.push(`${pathname}/lasercutreserve`)}>雷切登記</button>
-                <button 
-                    className="m-1 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => router.push(`${pathname}/threedpreserve`)}>3DP登記</button>
             </div>
         </div>
         </>
