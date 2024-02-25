@@ -83,8 +83,14 @@ export default function reserve() {
     
     return (
         <div className="m-2 p-3 text-lg flex flex-col items-center justify-center justify-between">
+
+            <div>
+                <div className="h-5"></div>
+                <p className="font-bold text-3xl">3DP使用登記</p>
+                <div className="h-5"></div>
+            </div>
             
-            <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
+            <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">隊伍編號：</p>
                 <InputArea
                     editable={false}
@@ -92,8 +98,8 @@ export default function reserve() {
                     />
             </div>
             
-            <div className="flex items-end w-2/6 h-5" />
-            <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
+            <div className="flex items-end w-2/5 h-5" />
+            <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
                 <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
                 <select 
                     className="p-1 h-8 border-black border-2 text-gray-800 rounded-lg bg-white focus:outline-none"
@@ -111,7 +117,7 @@ export default function reserve() {
             </div>
 
             
-            <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
+            <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">檔案名稱：</p>
                 <InputArea
                     ref={fileRef}
@@ -126,25 +132,31 @@ export default function reserve() {
                 {falseTitle && <p className="ml-20 w-3/4 pl-5 text-sm text-red-500">請輸入檔案名稱</p>}
                 {tooLong && <p className="ml-20 w-3/4 pl-5 text-sm text-red-500">檔案名稱不可超過15字</p>}
             </div>
-            <Checkbox onClick = {()=>setLoadBearing((prev) => (!prev))}></Checkbox>需要支撐
-            <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">使用材料</InputLabel>
-                    <Select
-                        // labelId="demo-simple-select-label"
-                        // id="demo-simple-select"
-                        defaultValue=""
-                        label="使用材料"
-                        onChange={(e)=>{setMaterial([(e.target.value)]);}}>
-                        <MenuItem value={"PLA"}>PLA</MenuItem>
-                        <MenuItem value={"others"}>others</MenuItem>
-                    </Select>
-            </FormControl>
 
-            <div className="m-3 mb-0.5 w-2/6 flex gap-2">
+            <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
+                <p className="font-bold flex-end w-1/4 text-right">使用材料：</p>
+                <select 
+                    className="p-1 h-8 border-black border-2 text-gray-800 rounded-lg bg-white focus:outline-none"
+                    value={type}
+                    onChange={(e)=>setType(e.target.value)}
+                    defaultValue="">
+                    <option value="">--Select--</option>
+                    <option value="PLA">PLA</option>
+                    <option value="others">其他</option>
+                </select>
+            </div>
+
+            <div className="flex items-end w-2/6 h-5" />
+            <div className="flex items-center">
+                <Checkbox style={{color: "yellow"}} onClick = {()=>setLoadBearing((prev) => (!prev))}></Checkbox>
+                <p>需要支撐</p>
+            </div>
+
+            <div className="m-3 mb-0.5 w-2/5 flex gap-2">
                 <p className="font-bold w-1/4 text-right">備註：</p>
                 <textarea
                     ref={noteRef}
-                    className="resize-none p-1 border-2 text-gray-800 border-black rounded-lg focus:border-gray-600 focus:outline-none"
+                    className="resize-none p-1 border-2 w-full text-gray-800 border-black rounded-lg focus:border-gray-600 focus:outline-none"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                 />

@@ -101,8 +101,9 @@ export default function Login() {
 
     return (
         <>
+        <div className="h-8"></div>
         <div className="m-2 flex flex-col items-center justify-between">
-            <div className="m-2 flex items-center gap-2 active:none">
+            <div className="m-2 flex w-2/6 justify-center items-center gap-2 active:none">
                 <p className="font-bold">帳號：</p>
                 <InputArea
                     ref={usernameRef}
@@ -112,7 +113,8 @@ export default function Login() {
                     onChange={(e) => setUsername(e)}
                 />
             </div>
-            <div className="m-2 flex items-center gap-2">
+            <div className="h-5"></div>
+            <div className="m-2 flex w-2/6 justify-center items-center gap-2">
                 <p className="font-bold">密碼：</p>
                 <InputArea
                     ref={passwordRef}
@@ -123,6 +125,7 @@ export default function Login() {
                     onChange={(e) => setPassword(e)}
                 />
             </div>
+            <div className="h-4"></div>
             {isSignUp && <div className="w-1/3 m-2 flex items-center gap-2">
                 <p className="font-bold">確認密碼：</p>
                 <InputArea

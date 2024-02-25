@@ -80,7 +80,7 @@ export default function reserve() {
                 comment,
             })
         }catch(error){
-            alert("Sorry, something rong happened. Please try again later.");
+            alert("Sorry, something wrong happened. Please try again later.");
             console.log(error);   
         }
         
@@ -90,6 +90,12 @@ export default function reserve() {
     
     return (
         <div className="m-2 p-3 text-lg flex flex-col items-center justify-center justify-between">
+
+            <div>
+                <div className="h-5"></div>
+                <p className="font-bold text-3xl">雷切使用登記</p>
+                <div className="h-5"></div>
+            </div>
             
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">隊伍編號：</p>
@@ -98,7 +104,6 @@ export default function reserve() {
                     value={group}
                     />
             </div>
-            
             <div className="flex items-end w-2/6 h-5" />
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 {/* <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
@@ -116,40 +121,52 @@ export default function reserve() {
             {/* <div className="flex items-end w-2/6 h-5">
                 {unselected && <p className="ml-20 w-3/4  pl-5 text-sm text-red-500 ">請選擇借用機台類型</p>}
             </div> */}
-
-            <Checkbox onClick={ ()=>{switchCase()} }/>自行攜帶板材雷切(需在備註寫下材質與速度、功率等參數)
-            <div style = {{display : customized?"none":"block"}}>
-            <DragDropContext 
-                onDragEnd ={ (event) => {
-                    const { source, destination } = event;
-                    if (!destination) {
-                      return;
-                    }
-                    let newMaterial = [...material];
-                    const [remove] = newMaterial.splice(source.index, 1);
-                    newMaterial.splice(destination.index, 0, remove);
-                    setMaterial(newMaterial);
-                    setMaterialBackUp(newMaterial);
-                  }}
-                
-                >
-                <Droppable droppableId="drop-id">
-                    {(provided, snapshot) => (
-                    <div {...provided.droppableProps} ref={provided.innerRef}>
-                        {material.map((item, index) => (
-                            <Draggable key={item} draggableId={item} index={index} >
-                                {(provided, snapshot) => (
-                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    {item}
-                                </div>
-                                )}
-                            </Draggable>
-                            )
+            <div className="w-1/5 items-center text-center">
+                <div style = {{display : customized?"none":"block"}}>
+                <div>
+                    <p className="text-xl">選擇板材志願序</p>
+                </div>
+                <div className="h-5"></div>
+                <DragDropContext 
+                    onDragEnd ={ (event) => {
+                        const { source, destination } = event;
+                        if (!destination) {
+                        return;
+                        }
+                        let newMaterial = [...material];
+                        const [remove] = newMaterial.splice(source.index, 1);
+                        newMaterial.splice(destination.index, 0, remove);
+                        setMaterial(newMaterial);
+                        setMaterialBackUp(newMaterial);
+                    }}
+                    
+                    >
+                    <Droppable droppableId="drop-id">
+                        {(provided, snapshot) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {material.map((item, index) => (
+                                <Draggable key={item} draggableId={item} index={index} >
+                                    {(provided, snapshot) => (
+                                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                        <div className="bg-gray-600 rounded">
+                                            {item}
+                                        </div>
+                                        <div className="h-2"></div>
+                                    </div>
+                                    )}
+                                </Draggable>
+                                )
+                            )}
+                        </div>
                         )}
-                    </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+                    </Droppable>
+                </DragDropContext>
+                </div>
+            </div>
+            <div className="h-7"></div>
+            <div className="flex items-center">
+                <Checkbox style={{color: "yellow"}} onClick={ ()=>{switchCase()} }/>
+                <p>自行攜帶板材雷切(需在備註寫下材質與速度、功率等參數)</p>
             </div>
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">檔案名稱：</p>
@@ -171,7 +188,7 @@ export default function reserve() {
                 <p className="font-bold w-1/4 text-right">備註：</p>
                 <textarea
                     ref={noteRef}
-                    className="resize-none p-1 border-2 text-gray-800 border-black rounded-lg focus:border-gray-600 focus:outline-none"
+                    className="resize-none w-full p-1 border-2 text-gray-800 border-black rounded-lg focus:border-gray-600 focus:outline-none"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                 />

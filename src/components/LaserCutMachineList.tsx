@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import RequestCardForMachine from "./RequestCardForMachine"
 import { RequestContext } from "@/context/Request";
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import useAdmin from "@/hooks/useAdmin";
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -41,7 +42,6 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
     const [dialogString, setDialogString] = useState("");
     const [name, setName] = useState(0);
     const [groupID, setGroupID] = useState(0);
-    
 
     useEffect(() => {
         const gReq = async () => {
@@ -112,19 +112,31 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
         //     </div>
         // </div>
         // </>
+        
         <>
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+        <div className="flex-col w-full content-start">
+            <TableContainer component={Paper} sx={{width: '95%',maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
                     <TableHead>
                     </TableHead>
                     <TableBody>
-                        <TableRow key="head">
-                            <TableCell>預約組別</TableCell>
-                            <TableCell>檔案名稱</TableCell>
-                            <TableCell>最終板材</TableCell>
-                            <TableCell>狀態</TableCell>
-                            <TableCell>備註</TableCell>
+                        <TableRow key="head" className="bg-yellow-300">
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>預約組別</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>檔案名稱</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>最終板材</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>狀態</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>備註</TableCell>
                         </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
+            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)} type="laser"/>
+            <TableContainer component={Paper} sx={{width: '95%',maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
                         {
                             requestList?.map( (request)=>(
                                 // <RequestCard information={{
@@ -135,12 +147,12 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
                                 //     comment:request.comment
 
                                 // }}></RequestCard>
-                               ( request.machine === index && request.status === "切")?
+                            ( request.machine === index && request.status === "切")?
                             <TableRow key={request.id}>
-                                <TableCell>{String(request.groupname)}</TableCell>
-                                <TableCell>{request.filename}</TableCell>
-                                <TableCell>{request.finalMaterial}</TableCell>
-                                <TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.finalMaterial}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>
                                     {request.status}
                                     <Button onClick={()=>{
                                             setDialogOpen(true);
@@ -148,7 +160,7 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
                                             setName(request.groupname);
                                         }}>完成</Button>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>
                                     <Button onClick={()=>{
                                             setCommentDialogOpen(true);
                                             setDialogString(request.comment)
@@ -165,6 +177,7 @@ export default function LaserCutMachineList({ index }: MachineListProps) {
             </TableContainer>
             <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
             <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)} type="laser"/>
+        </div>
         </>
     )
 }

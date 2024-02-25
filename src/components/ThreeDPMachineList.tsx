@@ -112,18 +112,29 @@ export default function ThreeDPMachineList({ index }: MachineListProps) {
         // </div>
         // </>
         <>
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+        <div className="flex-col w-full content-start">
+            <TableContainer component={Paper} sx={{width: '95%', maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{ tableLayout: 'fixed' }}>
                     <TableHead>
                     </TableHead>
                     <TableBody>
-                        <TableRow key="head">
-                            <TableCell>預約組別</TableCell>
-                            <TableCell>檔案名稱</TableCell>
-                            <TableCell>承重與否</TableCell>
-                            <TableCell>狀態</TableCell>
-                            <TableCell>備註</TableCell>
+                        <TableRow key="head" className="bg-yellow-300">
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>預約組別</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>檔案名稱</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>承重與否</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>狀態</TableCell>
+                            <TableCell sx={{fontWeight: 'bold', textAlign: 'center'}}>備註</TableCell>
                         </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
+            <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)} type="3dp"/>
+            <TableContainer component={Paper} sx={{width: '95%', maxHeight: '400px', overflow: 'auto'}}>
+                <Table aria-label="simple table" style={{tableLayout: 'fixed'}}>
+                    <TableHead>
+                    </TableHead>
+                    <TableBody>
                         {
                             requestList?.map( (request)=>(
                                 // <RequestCard information={{
@@ -136,10 +147,10 @@ export default function ThreeDPMachineList({ index }: MachineListProps) {
                                 // }}></RequestCard>
                                ( request.machine === index && request.status === "切")?
                             <TableRow key={request.id}>
-                                <TableCell>{String(request.groupname)}</TableCell>
-                                <TableCell>{request.filename}</TableCell>
-                                <TableCell>{request.loadBearing? "是" : "否" }</TableCell>
-                                <TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>{request.loadBearing? "是" : "否" }</TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>
                                     {request.status}
                                     <Button onClick={()=>{
                                             setDialogOpen(true);
@@ -147,7 +158,7 @@ export default function ThreeDPMachineList({ index }: MachineListProps) {
                                             setName(request.groupname);
                                         }}>完成</Button>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell sx={{textAlign: 'center'}}>
                                     <Button onClick={()=>{
                                             setCommentDialogOpen(true);
                                             setDialogString(request.comment)
@@ -164,6 +175,7 @@ export default function ThreeDPMachineList({ index }: MachineListProps) {
             </TableContainer>
             <CommentDialog open={commentDialogOpen} comment={dialogString} onClose={() => setCommentDialogOpen(false)}/>
             <FinishedDialog open={dialogOpen} groupName={name} id={groupID} onClose={()=>setDialogOpen(false)} type="3dp"/>
+        </div>
         </>
     )
 }
