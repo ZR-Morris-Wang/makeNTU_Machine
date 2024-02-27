@@ -179,7 +179,7 @@ export default function reserve() {
             <div className="m-2 flex gap-2">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-                    onClick={() => router.back()}
+                    onClick={() => router.push(`/contestant/${pathTemp[2]}`)}
                 >取消</button>
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 

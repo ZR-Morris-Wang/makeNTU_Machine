@@ -15,16 +15,13 @@ export default function reserve() {
     const { sendRequest } = useContext(RequestContext);
     const router = useRouter();
     const pathname = usePathname();
-    const [type, setType] = useState("");
     const [filename, setFilename] = useState("");
     const [comment, setComment] = useState("");
     const [falseTitle, setFalseTitle] = useState(false);
     const [tooLong, setTooLong] = useState(false);
     const [NoteTooLong, setNoteTooLong] = useState(false);
-    const [material, setMaterial] = useState([""]);
     const [loadBearing, setLoadBearing] = useState(false);
     const [open, setOpen] = useState(false);
-    const { postThreeDPRequest } = useThreeDPRequest();
     const pathTemp = pathname.split("/");
     const handleSubmit = async () => {
         if(!filename) {
@@ -102,16 +99,7 @@ export default function reserve() {
             </div>
 
             <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
-                <p className="font-bold flex-end w-1/4 text-right">使用材料：</p>
-                <select 
-                    className="p-1 h-8 border-black border-2 text-gray-800 rounded-lg bg-white focus:outline-none"
-                    value={material[0]}
-                    onChange={(e)=>setMaterial([e.target.value])}
-                    defaultValue="">
-                    <option value="">--Select--</option>
-                    <option value="PLA">PLA</option>
-                    <option value="others">其他</option>
-                </select>
+                <p className="font-bold flex-end w-1/4 text-right">使用材料：PLA</p>
             </div>
 
             <div className="flex items-end w-2/6 h-5" />
@@ -136,7 +124,7 @@ export default function reserve() {
             <div className="m-2 flex gap-2">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-                    onClick={() => router.back()}
+                    onClick={() => router.push(`/contestant/${pathTemp[2]}`)}
                 >取消</button>
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
@@ -145,7 +133,7 @@ export default function reserve() {
         <ThreeDPReserveDialog
             open={open}
             group={pathTemp[2]}
-            material={material}
+            material={["PLA"]}
             filename={filename}
             comment={comment}
             loadBearing={loadBearing}

@@ -69,21 +69,7 @@ export default function LaserCutQueueListForContestant() {
         }
         gReq();
     },[]);
-    const testRequest = {
-        group: "team1",
-        filename: "test1",
-        type: "3DP",
-        status: "waiting",
-    };
-    const testUser1 = {
-        name: "team1", 
-        permission: "contestant",
-    }
-    const testUser2 = {
-        name: "team2", 
-        permission: "contestant",
-    }
-
+    
     return (
         <>
         {/* <div className="m-2 relative flex flex-col items-center justify-start">
@@ -161,22 +147,19 @@ export default function LaserCutQueueListForContestant() {
                     <TableBody>
                         {
                             requestList?.map((request)=>(
-                                // <RequestCard information={{
-                                //     group:String(request.groupname),
-                                //     filename:request.filename,
-                                //     material:request.material,
-                                //     status:request.status,
-                                //     comment:request.comment
-
-                                // }}></RequestCard>
-                            <TableRow className={String(request.groupname)===group ? "bg-gray-300" : "" } key={request.id}>
-                                <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{request.material}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{request.finalMaterial}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}><Status id={request.id} isAdmin={false} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status></TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{request.comment}</TableCell>
-                            </TableRow>
+                                <TableRow className={String(request.groupname)===group ? "bg-yellow-100" : "" } key={request.id}>
+                                    <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}>
+                                        {request.material.map((mat)=>
+                                            (<p id={mat}>
+                                                {(request.material.indexOf(mat)+1)+'. '+mat}
+                                            </p>))}
+                                    </TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}>{request.finalMaterial}</TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}><Status id={request.id} isAdmin={false} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status></TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}>{request.comment}</TableCell>
+                                </TableRow>
                                 )
                             )
                         }

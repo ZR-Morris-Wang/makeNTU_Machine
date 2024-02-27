@@ -47,6 +47,7 @@ export default function FinishedDialog({ id, open, groupName, onClose, type }: F
         <>
             <Dialog open={open} onClose={onClose}>
                 <DialogTitle>確定{type === "laser" ? "雷切" : "3D列印" }完畢?</DialogTitle>
+                <Separator />
                 <DialogContent className="w-96 h-96">
                     <div className="m-1 w-full flex flex-col items-top justify-center">
                         <p className="text-lg font-bold">記得請{groupName}的選手拿取雷切成品</p>
