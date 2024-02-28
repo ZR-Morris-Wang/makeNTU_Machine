@@ -7,26 +7,22 @@ import { AccountContext } from "@/context/Account";
 import { RequestContext } from "@/context/Request";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
+import LaserReserveDialog from "@/components/LaserReserveDialog";
 
 export default function reserve() {
     const { user } = useContext(AccountContext);
     const { sendRequest } = useContext(RequestContext);
-    const fileRef = useRef<HTMLInputElement>(null);
-    const noteRef = useRef<HTMLTextAreaElement>(null);
     const router = useRouter();
     const pathname = usePathname();
-    const [type, setType] = useState("");
     const [filename, setFilename] = useState("");
     const [comment, setComment] = useState("");
     const [falseTitle, setFalseTitle] = useState(false);
     const [tooLong, setTooLong] = useState(false);
     const [NoteTooLong, setNoteTooLong] = useState(false);
-    const [unselected, setUnselected] = useState(false);
     const [material, setMaterial] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
     const [materialBackUp, setMaterialBackUp] = useState(["3mm密集板","5mm密集板","3mm壓克力","5mm壓克力"]);
     const [customized, setCustomized] = useState(false);
-    const { postLaserCutRequest } = useLaserCutRequest();
-    const group = "team1";
+    const [open, setOpen] = useState(false);
     // if(user?.permission!=='admin' && user?.permission!=='contestant'){
     //     if(!tooLong) {
     //         alert("Please login first!");
@@ -34,7 +30,7 @@ export default function reserve() {
     //     }
     //     router.push('/');
     // }
-    const customizedMaterial = ["自訂"]
+    const pathTemp = pathname.split("/");
     const switchCase = function(){
         if (customized===false){
             setCustomized(true);
@@ -45,47 +41,29 @@ export default function reserve() {
             setMaterial(materialBackUp);
         }
     }
-    
     const handleSubmit = async () => {
-        
         if(!filename) {
             setFalseTitle(true);
             return;
-        } else {
+        }
+        else {
             setFalseTitle(false);
-        } if(filename.length > 15) {
+        }
+        
+        if(filename.length > 15) {
             setTooLong(true);
             return;
-        } else {
+        }
+        else {
             setTooLong(false);
-        } if(comment.length > 60) {
+        }
+        
+        if(comment.length > 60) {
             setNoteTooLong(true);
             return;
         }
-        const pathTemp = pathname.split("/");
-        const group = pathTemp[2];
-        // try {
-        //     sendRequest(request);
-        // } catch (error) {
-        //     alert("Sorry, something rong happened. Please try again later.");
-        //     console.log(error);
-        //     return;
-        // }
-        
-        try{
-            await postLaserCutRequest({
-                group,
-                filename,
-                material,
-                comment,
-            })
-        }catch(error){
-            alert("Sorry, something wrong happened. Please try again later.");
-            console.log(error);   
-        }
-        
-        
-        // router.push(`/contestant/${group}`);
+
+        setOpen(true);
     }
     
     return (
@@ -101,7 +79,7 @@ export default function reserve() {
                 <p className="font-bold w-1/4 text-right">隊伍編號：</p>
                 <InputArea
                     editable={false}
-                    value={group}
+                    value={pathTemp[2]}
                     />
             </div>
             <div className="flex items-end w-2/6 h-5" />
@@ -171,7 +149,7 @@ export default function reserve() {
             <div className="m-3 mb-0.5 w-2/6 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">檔案名稱：</p>
                 <InputArea
-                    ref={fileRef}
+                    
                     placeHolder={"file name"}
                     editable={true}
                     value={filename}
@@ -187,7 +165,7 @@ export default function reserve() {
             <div className="m-3 mb-0.5 w-2/6 flex gap-2">
                 <p className="font-bold w-1/4 text-right">備註：</p>
                 <textarea
-                    ref={noteRef}
+                    
                     className="resize-none w-full p-1 border-2 text-gray-800 border-black rounded-lg focus:border-gray-600 focus:outline-none"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
@@ -201,13 +179,20 @@ export default function reserve() {
             <div className="m-2 flex gap-2">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-                    onClick={() => router.back()}
+                    onClick={() => router.push(`/contestant/${pathTemp[2]}`)}
                 >取消</button>
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-                    onClick={handleSubmit}>登記</button>
+                    onClick={()=>handleSubmit()}>登記</button>
             </div>
-
+            <LaserReserveDialog 
+                open={open}
+                group={pathTemp[2]}
+                material={material}
+                comment={comment}
+                filename={filename}
+                onClose={()=>setOpen(false)}
+            />
         </div>
     )
 }

@@ -170,7 +170,7 @@ export default function ThreeDPQueueListForContestant() {
                                 //     comment:request.comment
 
                                 // }}></RequestCard>
-                            <TableRow className={String(request.groupname)===group ? "bg-gray-300" : "" } key={request.id}>
+                            <TableRow className={String(request.groupname)===group ? "bg-yellow-100" : "" } key={request.id}>
                                 <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
                                 <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
                                 <TableCell sx={{textAlign: 'center'}}>{request.loadBearing? "是" : "否"}</TableCell>

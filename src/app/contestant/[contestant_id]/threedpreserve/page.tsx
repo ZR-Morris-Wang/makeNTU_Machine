@@ -8,77 +8,43 @@ import useLaserCutRequest from "@/hooks/useLaserCutRequest";
 import { Checkbox } from "@mui/material";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import useThreeDPRequest from "@/hooks/useThreeDPRequest";
+import ThreeDPReserveDialog from "@/components/ThreeDPReserveDialog";
+
 export default function reserve() {
     const { user } = useContext(AccountContext);
     const { sendRequest } = useContext(RequestContext);
-    const fileRef = useRef<HTMLInputElement>(null);
-    const noteRef = useRef<HTMLTextAreaElement>(null);
     const router = useRouter();
     const pathname = usePathname();
-    const [type, setType] = useState("");
     const [filename, setFilename] = useState("");
     const [comment, setComment] = useState("");
     const [falseTitle, setFalseTitle] = useState(false);
     const [tooLong, setTooLong] = useState(false);
     const [NoteTooLong, setNoteTooLong] = useState(false);
-    const [unselected, setUnselected] = useState(false);
-    const [material, setMaterial] = useState([""]);
     const [loadBearing, setLoadBearing] = useState(false);
-    const { postThreeDPRequest } = useThreeDPRequest();
-    const group = "team1";
-    // if(user?.permission!=='admin' && user?.permission!=='contestant'){
-    //     if(!tooLong) {
-    //         alert("Please login first!");
-    //         setTooLong(true);
-    //     }
-    //     router.push('/');
-    // }
-    
+    const [open, setOpen] = useState(false);
+    const pathTemp = pathname.split("/");
     const handleSubmit = async () => {
-        if(type === "") {
-            setUnselected(true);
-            return;
-        } else {
-            setUnselected(false);
-        } if(!filename) {
+        if(!filename) {
             setFalseTitle(true);
             return;
-        } else {
+        }
+        else {
             setFalseTitle(false);
-        } if(filename.length > 15) {
+        }
+        
+        if(filename.length > 15) {
             setTooLong(true);
             return;
-        } else {
+        }
+        else {
             setTooLong(false);
-        } if(comment.length > 60) {
+        }
+        if(comment.length > 60) {
             setNoteTooLong(true);
             return;
         }
-        const pathTemp = pathname.split("/");
-        const group = pathTemp[2];
-        // try {
-        //     sendRequest(request);
-        // } catch (error) {
-        //     alert("Sorry, something rong happened. Please try again later.");
-        //     console.log(error);
-        //     return;
-        // }
         
-        try{
-            await postThreeDPRequest({
-                group,
-                filename,
-                loadBearing,
-                material,
-                comment,
-            })
-        }catch(error){
-            alert("Sorry, something rong happened. Please try again later.");
-            console.log(error);   
-        }
-        
-        
-        // router.push(`/contestant/${group}`);
+        setOpen(true);
     }
     
     return (
@@ -94,13 +60,13 @@ export default function reserve() {
                 <p className="font-bold w-1/4 text-right">隊伍編號：</p>
                 <InputArea
                     editable={false}
-                    value={group}
+                    value={pathTemp[2]}
                     />
             </div>
             
             <div className="flex items-end w-2/5 h-5" />
             <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
-                <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
+                {/* <p className="font-bold flex-end w-1/4 text-right">機台類型：</p>
                 <select 
                     className="p-1 h-8 border-black border-2 text-gray-800 rounded-lg bg-white focus:outline-none"
                     value={type}
@@ -109,18 +75,17 @@ export default function reserve() {
                     <option value="">--Select--</option>
                     <option value="3DP">3D列印機</option>
                     <option value="LCM">雷射切割機</option>
-                </select>
+                </select> */}
             </div>
             
-            <div className="flex items-end w-2/6 h-5">
+            {/* <div className="flex items-end w-2/6 h-5">
                 {unselected && <p className="ml-20 w-3/4  pl-5 text-sm text-red-500 ">請選擇借用機台類型</p>}
-            </div>
+            </div> */}
 
             
             <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
                 <p className="font-bold w-1/4 text-right">檔案名稱：</p>
                 <InputArea
-                    ref={fileRef}
                     placeHolder={"file name"}
                     editable={true}
                     value={filename}
@@ -134,16 +99,7 @@ export default function reserve() {
             </div>
 
             <div className="m-3 mb-0.5 w-2/5 flex items-center gap-2">
-                <p className="font-bold flex-end w-1/4 text-right">使用材料：</p>
-                <select 
-                    className="p-1 h-8 border-black border-2 text-gray-800 rounded-lg bg-white focus:outline-none"
-                    value={type}
-                    onChange={(e)=>setType(e.target.value)}
-                    defaultValue="">
-                    <option value="">--Select--</option>
-                    <option value="PLA">PLA</option>
-                    <option value="others">其他</option>
-                </select>
+                <p className="font-bold flex-end w-1/4 text-right">使用材料：PLA</p>
             </div>
 
             <div className="flex items-end w-2/6 h-5" />
@@ -155,7 +111,6 @@ export default function reserve() {
             <div className="m-3 mb-0.5 w-2/5 flex gap-2">
                 <p className="font-bold w-1/4 text-right">備註：</p>
                 <textarea
-                    ref={noteRef}
                     className="resize-none p-1 border-2 w-full text-gray-800 border-black rounded-lg focus:border-gray-600 focus:outline-none"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
@@ -169,13 +124,21 @@ export default function reserve() {
             <div className="m-2 flex gap-2">
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
-                    onClick={() => router.back()}
+                    onClick={() => router.push(`/contestant/${pathTemp[2]}`)}
                 >取消</button>
                 <button
                     className="m-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
                     onClick={handleSubmit}>登記</button>
             </div>
-
+        <ThreeDPReserveDialog
+            open={open}
+            group={pathTemp[2]}
+            material={["PLA"]}
+            filename={filename}
+            comment={comment}
+            loadBearing={loadBearing}
+            onClose={()=>setOpen(false)}
+        />
         </div>
     )
 }

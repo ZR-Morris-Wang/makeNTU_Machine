@@ -60,6 +60,7 @@ export default function Login() {
         try {
             const { user: user, token: token } = await getAccount({ username, password });
             localStorage.setItem("jwt-token: ", token);
+            router.push(`/contestant/${username}`)
         } catch(error) {
             alert("發生錯誤");
             console.log(error);

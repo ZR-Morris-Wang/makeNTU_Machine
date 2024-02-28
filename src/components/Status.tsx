@@ -2,6 +2,13 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation";
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
 import useThreeDPRequest from "@/hooks/useThreeDPRequest";
+import { useRef } from "react";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
+
 type StatusProps = {
     id:number;
     isAdmin:boolean;
@@ -23,7 +30,7 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
     const { getLaserCutRequest, putLaserCutRequestStatus, putLaserCutRequestTimeLeft } = useLaserCutRequest();
     const { getThreeDPRequest, putThreeDPRequestStatus, putThreeDPRequestTimeLeft } = useThreeDPRequest();
     const [ requestList, setRequestList ] = useState<indRequestForStatus[]>();
-    
+    const select = useRef();
     const [ current, setCurrent ] = useState(0);//now status
     const [ timeCreated, setTimeCreated] = useState<Date>(new Date())//the latest time switched to "到"
     const [ countdown, setCountdown ] = useState(false);//whether counting down or not
@@ -41,11 +48,9 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
             const requestListTDPInit = await getThreeDPRequest();
             const requestListTDPJson:indRequestForStatus[] = requestListTDPInit["dbresultReq"];
             const requestListJson = requestListLaserJson.concat(requestListTDPJson)
-            // console.log(requestListJson)
             setRequestList(requestListJson);
             if (requestListJson.find(checkID) !== undefined) {
                 setTimeCreated(requestListJson.find(checkID)?.timeleft)
-                // console.log(requestListJson.find(checkID)?.timeleft)
             }
             else{
                 setTimeCreated(new Date(0))
@@ -60,18 +65,20 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
         if (statusArray.includes(initialState)){
             setCurrent(statusArray.indexOf(initialState))
         }
-        if (initialState === "到"){
-            setCountdown(true)
-            setTimeLeft(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000))
-        }
+        // if (initialState === "到"){
+        //     setCountdown(true)
+        //     setTimeLeft(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000))
+        // }
     },[])
     
     useEffect(() => {
         if(countdown === true){
-            gReq()
+            gReq();
+            setTimeLeft(10)
             const countDownByState = () => {
-                setTimeLeft(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000));
-                console.log(Math.trunc(new Date().getTime())/1000)
+                // setTimeLeft(Math.trunc(50-(new Date().getTime()-new Date(timeCreated).getTime())/1000));
+                setTimeLeft((prev)=>(prev-1))
+                // console.log(Math.trunc(new Date().getTime())/1000)
             }
             setTimer(setInterval(countDownByState, 1000));
         }
@@ -81,11 +88,11 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
     },[countdown])
 
     useEffect(()=>{
-        // console.log("tlchanged")
         if(timeLeft <= 0){
             clearInterval(timer);
             setCountdown(false);
             setWrong(true);
+            select.current.value = "過"
             handleStatusChange(id, "過")
         }
     },[timeLeft])
@@ -113,6 +120,7 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
         }
         router.refresh();
     }
+
     const handleTimeChange = async(id: number, newTimeLeft: Date) => {
         if(type === "laser"){
             try{
@@ -139,7 +147,28 @@ export default function( {id, isAdmin, initialState, timeStarted, type}: StatusP
 
     return(
         <>
-            {/* <button onClick={()=>{clearInterval(timer);alert("stopped!")}}>stop!</button> */}
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">狀態</InputLabel>
+                    <Select
+                        ref={select}
+                        defaultValue={initialState}
+                        label="狀態"
+                        onChange={(e)=>{
+                            handleStatusChange(id, e.target.value);
+                            if(e.target.value === "到"){
+                                setCountdown(true);
+                            }
+                            else{
+                                setCountdown(false);
+                            }
+                        }}>
+                        <MenuItem value="等">等</MenuItem>
+                        <MenuItem value="到">到</MenuItem>
+                        <MenuItem value="切">切</MenuItem>
+                        <MenuItem value="完">完</MenuItem>
+                        <MenuItem value="過">過</MenuItem>
+                    </Select>
+            </FormControl>
             {isAdmin === true ? 
             <>
                 <div className="inline-flex flex-row">

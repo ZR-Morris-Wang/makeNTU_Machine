@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import React, { useContext } from "react";
 import { RequestContext } from "@/context/Request";
 import { AccountContext } from "@/context/Account";
-import RequestCardForAdmin from "./RequestCardForAdmin";
 import CommentDialog from "./CommentDialog";
 import useLaserCutRequest from "@/hooks/useLaserCutRequest";
 import Status from "@/components/Status"
@@ -35,12 +34,6 @@ export default function LaserCutQueueListForAdmin() {
     const { user } = useContext(AccountContext);
     const [ requestList, setRequestList ] = useState<indRequestForAdmin[]>();
     const { getLaserCutRequest, putLaserCutRequestMachine, putLaserCutRequestMaterial } = useLaserCutRequest(); 
-    const testRequest = {
-        filename: "test1",
-        type: "3DP",
-        comment: "test1",
-        status: "waiting",
-    };
     const Button = require('@mui/material/Button').default
     const [commentDialogOpen, setCommentDialogOpen] = useState(false);
     const [dialogString, setDialogString] = useState("");
@@ -48,7 +41,6 @@ export default function LaserCutQueueListForAdmin() {
     useEffect(() => {
         const gReq = async () => {
             try{
-                //alert("rerender!")
                 const requestListInit = await getLaserCutRequest();
                 const requestListJson:indRequestForAdmin[] = requestListInit["dbresultReq"];
                 setRequestList(requestListJson);
@@ -66,7 +58,6 @@ export default function LaserCutQueueListForAdmin() {
                 id,
                 newFinalMaterial
             })
-            // console.log("successful test3")
         }catch(e){
             console.error(e);
         }
@@ -78,7 +69,6 @@ export default function LaserCutQueueListForAdmin() {
                 id,
                 newMachine
             })
-            // console.log("successful test3")
         }catch(e){
             console.error(e);
         }
@@ -138,61 +128,53 @@ export default function LaserCutQueueListForAdmin() {
                     </TableHead>
                     <TableBody>
                         {
-                            requestList?.map((request)=>(
-                                // <RequestCard information={{
-                                //     group:String(request.groupname),
-                                //     filename:request.filename,
-                                //     material:request.material,
-                                //     status:request.status,
-                                //     comment:request.comment
+                            requestList?.map((request)=>(                            
+                                <TableRow key={request.id}>
+                                    <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
+                                    
+                                    <TableCell>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">機台編號</InputLabel>
+                                                <Select
+                                                    defaultValue={String(request.machine)}
+                                                    label="機台編號"
+                                                    onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
+                                                    <MenuItem value={0}>未安排</MenuItem>
+                                                    <MenuItem value={1}>{Number(1)}</MenuItem>
+                                                    <MenuItem value={2}>{Number(2)}</MenuItem>
+                                                </Select>
+                                        </FormControl>
+                                    </TableCell>
 
-                                // }}></RequestCard>
-                            <TableRow key={request.id}>
-                                <TableCell sx={{textAlign: 'center'}}>{String(request.groupname)}</TableCell>
-                                <TableCell sx={{textAlign: 'center'}}>{request.filename}</TableCell>
-                                
-                                <TableCell>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">機台編號</InputLabel>
-                                            <Select
-                                                // labelId="demo-simple-select-label"
-                                                // id="demo-simple-select"
-                                                defaultValue={String(request.machine)}
-                                                label="機台編號"
-                                                onChange={(e)=>{handleMachineChange(request.id, Number(e.target.value));}}>
-                                                <MenuItem value={0}>未安排</MenuItem>
-                                                <MenuItem value={1}>{Number(1)}</MenuItem>
-                                                <MenuItem value={2}>{Number(2)}</MenuItem>
-                                            </Select>
-                                    </FormControl>
-                                </TableCell>
+                                    <TableCell sx={{whiteSpace:"pre", textAlign: 'center'}}>
+                                        {request.material.map((mat)=>
+                                            (<p className={request.material.indexOf(mat)===0?"text-red-400":""} id={mat}>
+                                                {(request.material.indexOf(mat)+1)+'. '+mat}
+                                            </p>))}
+                                    </TableCell>
+                                    
+                                    <TableCell>
+                                        <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">板材種類</InputLabel>
+                                                <Select
+                                                    defaultValue={request.finalMaterial}
+                                                    label="板材種類"
+                                                    onChange={(e)=>{handleMaterialChange(request.id,e.target.value as string);}}
+                                                    >   
+                                                    {request.material.map((eachMaterial)=>(<MenuItem value={eachMaterial}>{eachMaterial}</MenuItem>))}
+                                                </Select>
+                                        </FormControl>
+                                    </TableCell>
 
-                                <TableCell sx={{whiteSpace:"pre", textAlign: 'center'}}>{request.material.map(
-                                    (mat)=>(<p className={request.material.indexOf(mat)===0?"text-red-400":""} id={mat}>{(request.material.indexOf(mat)+1)+'. '+mat}</p>))}</TableCell>
-                                
-                                <TableCell>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">板材種類</InputLabel>
-                                            <Select
-                                                // labelId="demo-simple-select-label"
-                                                // id="demo-simple-select"
-                                                defaultValue={request.finalMaterial}
-                                                label="板材種類"
-                                                onChange={(e)=>{handleMaterialChange(request.id,e.target.value as string);}}
-                                                >   
-                                                {request.material.map((eachMaterial)=>(<MenuItem value={eachMaterial}>{eachMaterial}</MenuItem>))}
-                                            </Select>
-                                    </FormControl>
-                                </TableCell>
+                                    <TableCell sx={{textAlign: 'center'}}>
+                                        <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status>
+                                    </TableCell>
 
-                                <TableCell sx={{textAlign: 'center'}}>
-                                    <Status id={request.id} isAdmin={true} initialState={request.status} timeStarted={request.timeleft} type="laser"></Status>
-                                </TableCell>
-
-                                <TableCell sx={{textAlign: 'center'}}>
-                                    <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
-                                </TableCell>
-                            </TableRow>
+                                    <TableCell sx={{textAlign: 'center'}}>
+                                        <Button onClick={()=>{setCommentDialogOpen(true); setDialogString(request.comment)}}>{request.comment}</Button>    
+                                    </TableCell>
+                                </TableRow>
                                 )
                             )
                         }
