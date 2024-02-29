@@ -111,7 +111,7 @@ export default function Login() {
                     editable={true}
                     value={username}
                     placeHolder={"Team account"}
-                    onChange={(e) => setUsername(e)}
+                    onChange={(e) => {setUsername(e);console.log(e)}}
                 />
             </div>
             <div className="h-5"></div>
