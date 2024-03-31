@@ -13,7 +13,7 @@ export default function contestant() {
     const pathname = usePathname();
     const secretkey : string = process.env.PASSWORD_SECRET ? process.env.PASSWORD_SECRET : "Secret";
     const token = localStorage.getItem("token");
-    
+    console.log(token);
     function decodeJWT(token: string): Record<string, any> | null {
         const parts = token.split('.');
         if (parts.length !== 3) {
