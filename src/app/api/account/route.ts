@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
                         permission: permission,
                     }
                 });
-                const token = jwt.sign({username: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
+                const token = jwt.sign({username: user.name, permission: user.permission}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});
                 return NextResponse.json({ message: "OK", user: user, token: token }, {status: 200})
             } else {
                 return NextResponse.json(
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
             } else {
                 const isPasswordValid = password === user.password ? true : false;
                 if(isPasswordValid) {
-                    const token = jwt.sign({username: user.name}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});                    
+                    const token = jwt.sign({username: user.name, permission: user.permission}, secretkey, {expiresIn: env.JWT_EXPIRES_IN});                    
                     return NextResponse.json({ message: "OK", user: user, token: token }, {status: 200})
                 } else {
                     return NextResponse.json(
