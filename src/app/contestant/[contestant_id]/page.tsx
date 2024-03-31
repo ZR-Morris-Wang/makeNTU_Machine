@@ -12,7 +12,7 @@ export default function contestant() {
     const router = useRouter();
     const pathname = usePathname();
     const secretkey : string = process.env.PASSWORD_SECRET ? process.env.PASSWORD_SECRET : "Secret";
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("jwt-token: ");
     console.log(token);
     function decodeJWT(token: string): Record<string, any> | null {
         const parts = token.split('.');
